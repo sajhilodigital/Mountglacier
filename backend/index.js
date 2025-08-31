@@ -12,5 +12,5 @@ app.use(userController);
 const PORT = 8000;
 
 app.listen(PORT, () =>
-  console.log(`Server running on port: http://localhost:${PORT}`)
+  console.log(`Server running on port: ${PORT}`)
 );

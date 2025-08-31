@@ -1,12 +1,13 @@
 import express from "express";
 import UserTable from "./user.model.js";
+import bcrypt from "bcrypt";
 
 const router = express.Router();
 
 router.post("/user/register", async (req, res) => {
   const newUser = req.body;
 
-  const user = await User.findOne({ email: newUser.email });
+  const user = await UserTable.findOne({ email: newUser.email });
 
   //  if user, throw error
 
@@ -25,7 +26,7 @@ router.post("/user/register", async (req, res) => {
   return res.status(201).send({ message: "User is registered successfully." });
 });
 
-router.post("/user/login", (req, res) => {
+router.post("/user/login", (req: express.Request, res: express.Response) => {
   return res.status(200).send({ message: "login...." });
 });
 
