@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    const url = `mongodb+srv://tour:tour123@pramod.49wcu.mongodb.net/Mountglacier?retryWrites=true&w=majority&appName=pramod`;
+    const url = process.env.MONGO_URI;
     await mongoose.connect(url);
     console.log("connect database successful.....");
   } catch (error) {
