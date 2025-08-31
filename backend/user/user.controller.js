@@ -26,7 +26,7 @@ router.post("/user/register", async (req, res) => {
   return res.status(201).send({ message: "User is registered successfully." });
 });
 
-router.post("/user/login", (req: express.Request, res: express.Response) => {
+router.post("/user/login", (req, res) => {
   return res.status(200).send({ message: "login...." });
 });
 
