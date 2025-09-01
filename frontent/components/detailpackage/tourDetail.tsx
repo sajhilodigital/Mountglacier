@@ -1,14 +1,13 @@
 "use client";
-import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { motion } from "framer-motion";
 import { tours } from "@/lib/tourpackage";
+import { motion } from "framer-motion";
+import Image from "next/image";
 import { useParams } from "next/navigation";
-import OverviewPage from "./overviewpage";
-import Itinerary from "./itinerary";
 import Inclusions from "./inclusions";
 import InformationPage from "./information";
+import Itinerary from "./itinerary";
+import OverviewPage from "./overviewpage";
 import ReviewForm from "./review";
 
 export default function TourDetail() {
