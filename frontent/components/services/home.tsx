@@ -1,9 +1,9 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Box, Typography } from "@mui/material";
-import { Plane, Map, Camera, Shield, Users, Calendar } from "lucide-react";
+import { Calendar, Camera, Map, Plane, Shield, Users } from "lucide-react";
 import Link from "next/link";
 
 const services = [
@@ -11,37 +11,37 @@ const services = [
     title: "Flight Booking",
     desc: "Best deals on flights worldwide with 24/7 customer support",
     icon: <Plane className="h-10 w-10 text-sky-500" />,
-    link: "/flight",
+    link: "/services/flight",
   },
   {
     title: "Custom Itineraries",
     desc: "Personalized travel plans crafted by our expert travel consultants",
     icon: <Map className="h-10 w-10 text-orange-400" />,
-    link: "/custom",
+    link: "/services/custom",
   },
   {
     title: "Photo Tours",
     desc: "Capture stunning moments with guided photography expeditions",
     icon: <Camera className="h-10 w-10 text-green-500" />,
-    link: "/gallery",
+    link: "/services/gallery",
   },
   {
     title: "Travel Insurance",
     desc: "Comprehensive coverage for peace of mind during your journey",
     icon: <Shield className="h-10 w-10 text-sky-400" />,
-    link: "/travel",
+    link: "/services/travel",
   },
   {
     title: "Group Travel",
     desc: "Special packages for families, friends, and corporate groups",
     icon: <Users className="h-10 w-10 text-orange-400" />,
-    link: "/grouptravel",
+    link: "/services/grouptravel",
   },
   {
     title: "Event Planning",
     desc: "Destination weddings and special occasion travel arrangements",
     icon: <Calendar className="h-10 w-10 text-sky-500" />,
-    link: "/event",
+    link: "/services/event",
   },
 ];
 

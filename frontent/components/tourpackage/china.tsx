@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import { Chip } from "@mui/material";
+import Image from "next/image";
 
 const chinaTours = [
   {
@@ -126,9 +127,12 @@ export default function ChinaTrek() {
             className="shadow-lg rounded-2xl overflow-hidden transition-transform transform hover:scale-105 hover:shadow-2xl"
           >
             <div className="h-40 w-full overflow-hidden">
-              <img
-                src={tour.image}
-                alt={tour.title}
+              <Image
+                width={0}
+                height={0}
+                sizes="100%"
+                src={tour?.image}
+                alt={tour?.title}
                 className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
               />
             </div>
