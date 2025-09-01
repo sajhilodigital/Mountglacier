@@ -1,6 +1,6 @@
 "use client";
 
-import { PhoneCall, MessageCircle, Phone, Smartphone } from "lucide-react"; // using lucide icons
+import { PhoneCall, MessageCircle,  Smartphone } from "lucide-react"; // using lucide icons
 
 export default function ContactSection() {
   return (

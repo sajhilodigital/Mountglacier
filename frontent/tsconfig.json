@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/(user)/flight"
+    "app/(user)/services/flight"
   ],
   "exclude": ["node_modules"]
 }
