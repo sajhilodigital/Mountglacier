@@ -4,110 +4,117 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Box, Typography } from "@mui/material";
-import { Star, MapPin, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
-import { allDestinations } from "@/lib/destination";
-import { useRouter } from "next/navigation";
+import React from "react";
+
+const destinations = [
+  {
+    name: "Tour in Nepal",
+    img: "/destination/chitwan.jpg", // replace with your actual file name
+    link: "/destination/nepal-tour",
+  },
+  {
+    name: "Peak Climbing",
+    img: "/destination/everest.jpeg",
+    link: "/destination/peak-climbing",
+  },
+  {
+    name: "Trekking in Nepal",
+    img: "/destination/poonhill.jpeg",
+    link: "/destination/trekking",
+  },
+  {
+    name: "Bhutan Tours",
+    img: "/destination/bumthang.jpg",
+    link: "/destination/bhutan",
+  },
+  {
+    name: "China Tours",
+    img: "/destination/tibethigh.jpg",
+    link: "/destination/china",
+  },
+];
 
 export default function FeaturedDestinations() {
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-
-  const router = useRouter();
-
   return (
-    <Box className="py-12 px-6 bg-white text-center">
+    <Box className="py-16 px-6 bg-gradient-to-b from-white via-gray-50 to-gray-100 text-center">
+      {/* Title */}
       <Typography
         variant="h4"
-        className="font-bold mb-2"
+        className="font-extrabold mb-4 text-3xl md:text-4xl"
         sx={{
-          background: "linear-gradient(90deg, #000, #0077b6, #b08968)",
+          background: "linear-gradient(90deg, #0f172a, #1e3a8a, #f59e0b)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
         }}
       >
-        Featured Destinations
-      </Typography>
-      <Typography variant="body1" className="mb-10 text-gray-500">
-        Discover our handpicked selection of extraordinary places that will
-        leave you breathless
+        Top Destinations With Best Trekking Company In Nepal
       </Typography>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center">
-        {allDestinations.slice(0, 6).map((dest, index) => (
-          <Card
-            key={index}
-            className="rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer"
-          >
-            <div className="relative h-48 w-full overflow-hidden">
-              <Image
-                src={dest.img}
-                alt={dest.name}
-                fill
-                className="object-cover transition-transform duration-500 ease-in-out hover:scale-110"
-              />
-              <div className="absolute top-2 left-2 bg-white/90 text-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow">
-                <Star className="w-4 h-4 text-yellow-500" /> {dest.rating}
-              </div>
-            </div>
+      {/* Subtitle */}
+      <Typography
+        variant="body1"
+        className="mb-12 text-gray-600 max-w-3xl mx-auto leading-relaxed"
+      >
+        Discover our handpicked trekking and tour packages in Nepal, Bhutan, and
+        Tibet. From the Himalayas to cultural tours, find your perfect adventure
+        with us.
+      </Typography>
 
-            <CardContent className="p-4 text-left">
-              <div className="flex items-center text-gray-500 text-sm mb-1">
-                <MapPin className="w-4 h-4 mr-1" /> {dest.location}
-              </div>
-              <Typography variant="h6" className="font-bold mb-2">
-                {dest.name}
-              </Typography>
-
-              {/* Show full description if expanded */}
-              <Typography variant="body2" className="text-gray-600 mb-3">
-                {expandedIndex === index
-                  ? dest.longDesc
-                  : `${dest.shortDesc.slice(0, 120)}...`}
-              </Typography>
-
-              {/* Routes */}
-              {expandedIndex === index && dest.routes && (
-                <div>
-                  <h3 className="font-medium mt-2">Routes:</h3>
-                  <ul className="list-disc pl-5 text-sm text-gray-600">
-                    {dest.routes.map((r, i) => (
-                      <li key={i}>{r}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <div className="flex justify-end mt-3">
-                <Button
-                  onClick={() => router.push(`/destination/${dest?.id}`)}
-                  variant="outline"
-                  className="text-sm"
-                >
-                  view details
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="flex items-center gap-1"
-                  onClick={() =>
-                    setExpandedIndex(expandedIndex === index ? null : index)
-                  }
-                >
-                  {expandedIndex === index ? "less show" : "show more"}{" "}
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <div className="mt-10">
+      {/* Explore All button */}
+      <div className="flex justify-end mb-10">
         <Link href="/destination">
-          <Button className="bg-gradient-to-r from-blue-600 to-amber-500 text-white px-6 py-3 rounded-lg">
-            View All Destinations
+          <Button className="bg-gradient-to-r from-blue-600 to-amber-500 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300">
+            Explore All
           </Button>
         </Link>
+      </div>
+
+      {/* Custom Grid with center large card */}
+      <div
+        className="grid gap-6"
+        style={{
+          display: "grid",
+          gridTemplateAreas: `
+            "a b c"
+            "d b e"
+          `,
+          gridTemplateColumns: "1fr 1.5fr 1fr",
+          gridAutoRows: "260px",
+        }}
+      >
+        {destinations.map((dest, index) => {
+          const gridAreas = ["a", "b", "c", "d", "e"];
+          return (
+            <Card
+              key={index}
+              className="relative rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition-all duration-500"
+              style={{ gridArea: gridAreas[index] }}
+            >
+              {/* Background Image */}
+              <div className="relative h-full w-full">
+                <Image
+                  src={dest.img}
+                  alt={dest.name}
+                  fill
+                  priority
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                {/* Overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500"></div>
+              </div>
+
+              {/* Title Button */}
+              <CardContent className="absolute bottom-5 left-5">
+                <Link href={dest.link}>
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-5 py-2 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
+                    {dest.name}
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </Box>
   );
