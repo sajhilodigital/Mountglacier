@@ -212,7 +212,10 @@ export default function BhutanTours() {
           >
             <div className="h-40 w-full overflow-hidden">
               <Image
-                src={tour.image}
+                width={0}
+                height={0}
+                sizes="100%"
+                src={tour?.image}
                 alt={tour.title}
                 className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
               />
