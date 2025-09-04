@@ -25,10 +25,10 @@ export default function Dashboard() {
       <Box className="absolute inset-0 bg-black/60"></Box>
 
       {/* Content */}
-      <Box className="relative z-10 max-w-6xl mx-auto px-6 md:px-12">
+      <Box className="relative z-10 max-w-7xl mx-auto px-6 md:px-1 ">
         <Typography
-          variant="h2"
-          className="font-bold text-4xl md:text-6xl leading-tight drop-shadow-lg"
+          variant="h1"
+          className="!font-bold text-6xl md:text-6xl leading-tight drop-shadow-lg"
         >
           Discover Your Next <span className="text-orange-400">Adventure</span>
         </Typography>
