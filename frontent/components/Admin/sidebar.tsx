@@ -4,72 +4,61 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { User, Menu, X } from "lucide-react"; // icons
-import { useState } from "react";
+import { User, Home, Users, ShoppingCart, Mail, Settings } from "lucide-react";
 
 export default function Sidebar() {
   const menus = [
-    { name: "Dashboard", path: "/admin" },
-    { name: "Users", path: "/admin/user" },
-    { name: "Orders", path: "/admin/order" },
-    { name: "Contacts", path: "/admin/contact" },
-    { name: "Settings", path: "/admin/setting" },
+    { name: "Dashboard", path: "/admin", icon: <Home className="h-6 w-6" /> },
+    { name: "Users", path: "/admin/user", icon: <Users className="h-6 w-6" /> },
+    {
+      name: "Orders",
+      path: "/admin/order",
+      icon: <ShoppingCart className="h-6 w-6" />,
+    },
+    {
+      name: "Contacts",
+      path: "/admin/contact",
+      icon: <Mail className="h-6 w-6" />,
+    },
+    {
+      name: "Settings",
+      path: "/admin/setting",
+      icon: <Settings className="h-6 w-6" />,
+    },
   ];
 
-  const pathname = usePathname(); // Get current route
-  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <>
-      {/* Mobile Header with Hamburger */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-white shadow-md">
-        <Image src="/logo1.png" alt="Store Logo" width={120} height={40} />
-        <button onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-      </div>
-
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-white shadow-md p-6 flex flex-col transform transition-transform duration-300 z-50
-        ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:static`}
-      >
-        {/* Logo (hidden on mobile since header already has it) */}
-        <div className="hidden md:flex items-center mb-6">
-          <Image
-            src="/logo1.png"
-            alt="Store Logo"
-            width={200}
-            height={60}
-            className="mr-2"
-          />
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex fixed top-0 left-0 h-screen bg-white shadow-md p-6 flex-col z-50">
+        <div className="flex items-center mb-6">
+          <Image src="/logo1.png" alt="Store Logo" width={200} height={60} />
         </div>
 
-        {/* Menu */}
-        <nav className="space-y-4 flex-1">
+        <nav className="flex flex-col gap-2 flex-1">
           {menus.map((item, i) => {
             const isActive = pathname === item.path;
             return (
-              <Link key={i} href={item.path} onClick={() => setIsOpen(false)}>
+              <Link key={i} href={item.path}>
                 <Button
                   variant={isActive ? "default" : "ghost"}
-                  className="w-full justify-start"
+                  className="w-full justify-start hover:bg-gray-100"
                 >
-                  {item.name}
+                  {item.icon}
+                  <span className="ml-2">{item.name}</span>
                 </Button>
               </Link>
             );
           })}
         </nav>
 
-        {/* User Dashboard Button */}
         <div className="mt-4">
-          <Link href="/" onClick={() => setIsOpen(false)}>
+          <Link href="/">
             <Button
               variant={pathname.startsWith("/user") ? "default" : "ghost"}
-              className="w-full justify-start"
+              className="w-full justify-start hover:bg-gray-100"
             >
               <User className="h-5 w-5 mr-2" />
               User Dashboard
@@ -78,13 +67,35 @@ export default function Sidebar() {
         </div>
       </aside>
 
-      {/* Overlay for mobile */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-40 md:hidden z-40"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+      {/* Mobile Sidebar (Fixed-width icons only) */}
+      <aside className="fixed top-0 left-0 h-screen  md:w-full bg-white shadow-md flex flex-col items-center py-4 px-2 md:hidden z-50">
+        {menus.map((item, i) => {
+          const isActive = pathname === item.path;
+          return (
+            <Link key={i} href={item.path}>
+              <button
+                className={`w-12 h-12 flex items-center justify-center my-2 rounded-lg hover:bg-gray-100 transition-colors ${
+                  isActive ? "text-blue-600" : "text-gray-600"
+                }`}
+              >
+                {item.icon}
+              </button>
+            </Link>
+          );
+        })}
+
+        <div className="mt-auto">
+          <Link href="/">
+            <button
+              className={`w-12 h-12 flex items-center justify-center my-2 rounded-lg hover:bg-gray-100 transition-colors ${
+                pathname.startsWith("/user") ? "text-blue-600" : "text-gray-600"
+              }`}
+            >
+              <User className="h-6 w-6" />
+            </button>
+          </Link>
+        </div>
+      </aside>
     </>
   );
 }

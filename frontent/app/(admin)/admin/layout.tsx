@@ -4,7 +4,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Admin/sidebar";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -33,17 +32,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex min-h-screen">
+        <div className="flex min-h-screen w-full ">
           {/* Sidebar (fixed on the left) */}
-          <aside className="w-64 fixed top-0 left-0 h-screen border-r bg-white shadow-md">
+          <aside className="w-1/10 fixed md:w-64 h-screen z-50  ">
             <Sidebar />
           </aside>
 
           {/* Page content (with left margin so it doesn't overlap sidebar) */}
-          <main className="flex-1 ml-64 p-6 overflow-y-auto">{children}</main>
+          <main className="w-9/10 flex-1 ml-12 md:ml-64 px-4 ">{children}</main>
         </div>
       </body>
-     
     </html>
   );
 }

@@ -1,11 +1,22 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Users, DollarSign, MessageSquare } from "lucide-react";
+import {
+  Users,
+  ShoppingCart,
+  DollarSign,
+  MessageSquare,
+  Plus,
+  X,
+} from "lucide-react";
 import { motion } from "framer-motion";
+import TrekForm from "./trekform";
 
 export default function DashboardAdmin() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
   const stats = [
     {
       title: "Total Users",
@@ -67,13 +78,21 @@ export default function DashboardAdmin() {
   ];
 
   return (
-    <main className="flex-1 p-4 sm:p-6 overflow-y-auto bg-gray-50 min-h-screen">
+    <main className="flex-1 p-4 sm:p-6 overflow-y-auto bg-gray-50 min-h-screen relative">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold">Welcome Admin 👋</h1>
-        <p className="text-gray-500 text-sm sm:text-base">
-          Here’s what’s happening in your place today
-        </p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold">Welcome Admin 👋</h1>
+          <p className="text-gray-500 text-sm sm:text-base">
+            Here’s what’s happening in your place today
+          </p>
+        </div>
+        <Button
+          className="flex items-center gap-2 rounded-xl"
+          onClick={() => setIsFormOpen(true)}
+        >
+          <Plus className="w-4 h-4" /> Add Trek
+        </Button>
       </div>
 
       {/* Stats */}
@@ -116,8 +135,8 @@ export default function DashboardAdmin() {
         ))}
       </div>
 
-      {/* Orders & Users */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Recent Orders & Users */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Orders */}
         <Card className="rounded-2xl shadow-sm">
           <CardHeader>
@@ -185,6 +204,29 @@ export default function DashboardAdmin() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Overlay Trek Form */}
+      {isFormOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Blurred Background */}
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setIsFormOpen(false)}
+          ></div>
+
+          {/* Form Overlay */}
+          <div className="relative w-full max-w-5xl p-6 z-10 bg-white rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto">
+            <TrekForm />
+            <Button
+              variant="ghost"
+              className="absolute top-4 right-4 p-2"
+              onClick={() => setIsFormOpen(false)}
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
