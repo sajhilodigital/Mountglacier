@@ -1,86 +1,191 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
+import * as React from "react";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as yup from "yup";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
+
+import { Toaster, toast } from "sonner";
+import { LoginRequest, LoginResponse } from "@/lib/interfaces";
+import axiosInstance from "@/lib/axiosInstanstance";
+
+
+// ================= SCHEMA =================
+const LoginSchema = yup.object({
+  email: yup
+    .string()
+    .trim()
+    .required("Email is required")
+    .email("Enter a valid email"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters"),
+  remember: yup.boolean().required().default(false),
+});
+
+type LoginValues = yup.InferType<typeof LoginSchema>;
+
+// ================= PAGE =================
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const { mutate, isPending } = useMutation<LoginResponse, Error, LoginRequest>(
+    {
+      mutationKey: ["login-user"],
+      mutationFn: async (values: LoginValues): Promise<LoginResponse> => {
+        const res = await axiosInstance.post<LoginResponse>(
+          "/user/login",
+          values
+        );
+        return res.data;
+      },
+      onSuccess: (data) => {
+        if (data.success) {
+          toast.success("Logged in successfully");
+          router.push("/booknow");
+        } else {
+          toast.error(data.message || "Login failed");
+        }
+      },
+      onError: (err) => {
+        // Error is typed as `Error`
+        toast.error(err.message || "Invalid credentials");
+      },
+    }
+  );
 
-    // ✅ Check for Admin
-    if (email === "admin@gmail.com" && password === "Admin@123") {
-      router.push("/admin");
-    }
-    // ✅ Any other user goes to user dashboard
-    else if (email && password) {
-      router.push("/dashboard");
-    }
-    // ❌ Empty fields
-    else {
-      setError("Please enter email and password");
-    }
+  const initialValues: LoginValues = {
+    email: "",
+    password: "",
+    remember: false,
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-blue-200 p-6">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-blue-700 mb-4">Welcome Back</h2>
-        <p className="text-gray-500 mb-6 text-sm">
-          Login to continue your journey
-        </p>
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-muted to-background p-4">
+      <Toaster richColors position="top-center" />
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-          />
-
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-
-          <div className="flex justify-between text-sm text-gray-600">
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" /> <span>Remember me</span>
-            </label>
-            <a href="#" className="text-blue-600 hover:underline">
-              Forgot Password?
-            </a>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+      <Card className="w-full max-w-md border-0 shadow-xl">
+        <CardHeader className="space-y-2">
+          <CardTitle className="text-2xl">Welcome back</CardTitle>
+          <CardDescription>Sign in to continue your journey.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={LoginSchema}
+            onSubmit={(values) => mutate(values)}
           >
-            Login
-          </button>
-        </form>
+            {({ values, handleChange }) => (
+              <Form className="space-y-6">
+                {/* Email */}
+                <div>
+                  <Label>Email</Label>
+                  <div className="relative">
+                    <Field
+                      as={Input}
+                      type="email"
+                      name="email"
+                      autoComplete="email"
+                      placeholder="you@example.com"
+                      className="pl-10"
+                    />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-70" />
+                  </div>
+                  <ErrorMessage
+                    name="email"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
 
-        {/* ✅ Register Link */}
-        <p className="text-sm text-center mt-6 text-gray-600">
-          Don’t have an account?{" "}
-          <Link
-            href="/register"
-            className="text-blue-600 hover:underline font-medium"
-          >
-            Register
-          </Link>
-        </p>
-      </div>
+                {/* Password */}
+                <div>
+                  <Label>Password</Label>
+                  <div className="relative">
+                    <Field
+                      as={Input}
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      autoComplete="current-password"
+                      placeholder="••••••••"
+                      className="pl-10 pr-10"
+                    />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-70" />
+                    <button
+                      type="button"
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
+                      onClick={() => setShowPassword((s) => !s)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  <ErrorMessage
+                    name="password"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                {/* Remember + Forgot */}
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="remember"
+                      checked={values.remember}
+                      onChange={handleChange}
+                      className="h-4 w-4 rounded border"
+                    />
+                    Remember me
+                  </label>
+                  <a
+                    href="/forgot-password"
+                    className="text-sm underline underline-offset-4"
+                  >
+                    Forgot password?
+                  </a>
+                </div>
+
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? "Signing in…" : "Sign in"}
+                </Button>
+
+                <Separator className="my-2" />
+
+                <p className="text-sm text-center text-muted-foreground">
+                  Don’t have an account?{" "}
+                  <a className="underline underline-offset-4" href="/register">
+                    Create one
+                  </a>
+                </p>
+              </Form>
+            )}
+          </Formik>
+        </CardContent>
+      </Card>
     </div>
   );
 }
