@@ -9,7 +9,11 @@ const tourSchema = new mongoose.Schema(
     region: { type: String },
     description: { type: String },
     durationDays: { type: Number },
-    grade: { type: String, enum: ["Easy", "Moderate", "Strenuous"] },
+    grade: {
+      type: String,
+      enum: ["easy", "moderate", "risky", "challenging"], 
+      required: true,
+    },
     priceUSD: { type: Number },
     priceTiers: [
       {

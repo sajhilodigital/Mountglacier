@@ -14,7 +14,10 @@ export const tourSchema = yup.object({
   region: yup.string().optional(),
   description: yup.string().optional(),
   durationDays: yup.number().positive().optional(),
-  grade: yup.string().oneOf(["Easy", "Moderate", "Strenuous"]).optional(),
+  grade: yup
+    .string()
+    .oneOf(["easy", "moderate", "strenuous", "challenging"], "Invalid grade") // Added Challenging
+    .required("Grade is required"),
   priceUSD: yup.number().min(0).optional(),
   priceTiers: yup
     .array()
