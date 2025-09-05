@@ -1,4 +1,3 @@
-// backend/tour/tour.routes.js
 import express from "express";
 import validateReqBody from "../middleware/validate.req.body.middleware.js";
 import { tourSchema } from "../Validation/tour.validation.js";
@@ -8,25 +7,71 @@ import {
   isAdmin,
   isAuthenticated,
 } from "../middleware/authentication.middleware.js";
+import { upload } from "../Config/multer.js";
+import { uploadBufferToCloudinary } from "../Config/Clouninary.Services.js";
 
 const router = express.Router();
 
 /**
- * CREATE TOUR - ADMIN ONLY
+ * CREATE TOUR - ADMIN ONLY + Cloudinary Upload
  */
 router.post(
   "/tour/add",
   isAuthenticated,
   isAdmin,
+  upload.any(), // multer middleware
   validateReqBody(tourSchema),
   async (req, res, next) => {
     try {
-      const sanitizedBody = {
-        ...req.body,
-        createdBy: req.loggedInUserId,
-      };
+      const files = req.files || [];
+      const { body } = req;
 
-      const tour = await TourTable.create(sanitizedBody);
+      // Check duplicate slug
+      const existingTour = await TourTable.findOne({ slug: body.slug });
+      if (existingTour) {
+        return res.status(400).json({
+          success: false,
+          message: "Tour with this slug already exists",
+        });
+      }
+
+      // Parse itinerary safely
+      let itinerary = [];
+      if (body.itinerary) {
+        try {
+          itinerary =
+            typeof body.itinerary === "string" ? JSON.parse(body.itinerary) : body.itinerary;
+        } catch (err) {
+          return res.status(400).json({ success: false, message: "Invalid itinerary JSON" });
+        }
+      }
+
+      // Upload tour images
+      const tourImagesFiles = files.filter((f) => f.fieldname === "tourImages");
+      const images = [];
+      for (const file of tourImagesFiles) {
+        const result = await uploadBufferToCloudinary(file.buffer, "tours");
+        images.push({ url: result.secure_url, public_id: result.public_id });
+      }
+
+      // Upload itinerary images
+      const dayImagesFiles = files.filter((f) => f.fieldname.startsWith("dayImages-"));
+      for (const day of itinerary) {
+        const dayFiles = dayImagesFiles.filter((f) => f.fieldname === `dayImages-${day.day}`);
+        day.images = [];
+        for (const file of dayFiles) {
+          const result = await uploadBufferToCloudinary(file.buffer, `tours/day-${day.day}`);
+          day.images.push({ url: result.secure_url, public_id: result.public_id });
+        }
+      }
+
+      // Create tour
+      const tour = await TourTable.create({
+        ...body,
+        images,
+        itinerary,
+        createdBy: req.loggedInUserId,
+      });
 
       return res.status(201).json({
         success: true,
@@ -34,7 +79,7 @@ router.post(
         tour,
       });
     } catch (err) {
-      console.error("Error creating tour:", err.message);
+      console.error("Error creating tour:", err);
       next(err);
     }
   }
@@ -53,11 +98,9 @@ router.get("/tour/get/list", async (req, res, next) => {
       page = 1,
       limit = 10,
     } = req.query;
-
     const match = {};
 
-    // Filter building
-    if (region) match.region = { $regex: new RegExp(region, "i") }; // case-insensitive search
+    if (region) match.region = { $regex: new RegExp(region, "i") };
     if (grade) match.grade = grade;
     if (minPrice || maxPrice) match.priceUSD = {};
     if (minPrice) match.priceUSD.$gte = parseFloat(minPrice);
@@ -85,7 +128,7 @@ router.get("/tour/get/list", async (req, res, next) => {
 
     const totalTours = await TourTable.countDocuments(match);
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       count: tours.length,
       total: totalTours,
@@ -94,13 +137,13 @@ router.get("/tour/get/list", async (req, res, next) => {
       tours,
     });
   } catch (err) {
-    console.error("Error fetching tours:", err.message);
+    console.error("Error fetching tours:", err);
     next(err);
   }
 });
 
 /**
- * GET SINGLE TOUR DETAILS
+ * GET SINGLE TOUR
  */
 router.get(
   "/tour/get-detail/:id",
@@ -108,47 +151,125 @@ router.get(
   async (req, res, next) => {
     try {
       const tour = await TourTable.findById(req.params.id).lean();
-
-      if (!tour) {
-        return res.status(404).json({
-          success: false,
-          message: "Tour not found",
-        });
-      }
-
-      return res.status(200).json({
-        success: true,
-        tour,
-      });
+      if (!tour)
+        return res
+          .status(404)
+          .json({ success: false, message: "Tour not found" });
+      res.status(200).json({ success: true, tour });
     } catch (err) {
-      console.error("Error fetching tour detail:", err.message);
+      console.error(err);
       next(err);
     }
   }
 );
 
-/**
- * UPDATE TOUR - ADMIN ONLY
+/**  
+ * UPDATE TOUR - ADMIN ONLY + Cloudinary Update
  */
 router.put(
   "/tour/update/:id",
   validateMongoIdFromReqParams,
   isAuthenticated,
   isAdmin,
+  upload.any(),
   validateReqBody(tourSchema),
   async (req, res, next) => {
     try {
+      const { files, body } = req;
+
+      // ✅ Parse itinerary safely
+      let itinerary = [];
+      if (body.itinerary) {
+        try {
+          itinerary =
+            typeof body.itinerary === "string"
+              ? JSON.parse(body.itinerary)
+              : body.itinerary;
+        } catch {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid itinerary JSON",
+          });
+        }
+      }
+
+      // ✅ Handle Tour Images
+      let images = [];
+
+      if (files && files.length) {
+        const tourImageFiles = files.filter(
+          (f) => f.fieldname === "tourImages"
+        );
+        for (const file of tourImageFiles) {
+          const result = await uploadBufferToCloudinary(file.buffer, "tours");
+          images.push({
+            url: result.secure_url,
+            public_id: result.public_id,
+          });
+        }
+      } else if (body.images) {
+        // ✅ If no new files, check if body.images exists
+        try {
+          const parsedImages =
+            typeof body.images === "string"
+              ? JSON.parse(body.images)
+              : body.images;
+
+          // Convert from string array to object array if needed
+          images = parsedImages.map((img) =>
+            typeof img === "string"
+              ? { url: img, public_id: "" } // public_id empty for old images
+              : img
+          );
+        } catch {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid images data format",
+          });
+        }
+      }
+
+      // ✅ Handle Day Images
+      const dayImageFiles = files
+        ? files.filter((f) => f.fieldname.startsWith("dayImages-"))
+        : [];
+      for (const day of itinerary) {
+        day.images = [];
+        const dayFiles = dayImageFiles.filter(
+          (f) => f.fieldname === `dayImages-${day.day}`
+        );
+        for (const file of dayFiles) {
+          const result = await uploadBufferToCloudinary(
+            file.buffer,
+            `tours/day-${day.day}`
+          );
+          day.images.push({
+            url: result.secure_url,
+            public_id: result.public_id,
+          });
+        }
+      }
+
+      // ✅ Build update payload
+      const updateData = {
+        ...body,
+        images,
+        itinerary,
+      };
+
       const updatedTour = await TourTable.findByIdAndUpdate(
         req.params.id,
-        req.body,
-        { new: true, runValidators: true }
+        updateData,
+        {
+          new: true,
+          runValidators: true,
+        }
       );
 
       if (!updatedTour) {
-        return res.status(404).json({
-          success: false,
-          message: "Tour not found",
-        });
+        return res
+          .status(404)
+          .json({ success: false, message: "Tour not found" });
       }
 
       return res.status(200).json({
@@ -157,13 +278,16 @@ router.put(
         tour: updatedTour,
       });
     } catch (err) {
-      console.error("Error updating tour:", err.message);
+      console.error("Error updating tour:", err);
       next(err);
     }
   }
 );
 
-/**
+
+
+
+/** 
  * DELETE TOUR - ADMIN ONLY
  */
 router.delete(
@@ -174,20 +298,16 @@ router.delete(
   async (req, res, next) => {
     try {
       const deletedTour = await TourTable.findByIdAndDelete(req.params.id);
+      if (!deletedTour)
+        return res
+          .status(404)
+          .json({ success: false, message: "Tour not found" });
 
-      if (!deletedTour) {
-        return res.status(404).json({
-          success: false,
-          message: "Tour not found",
-        });
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: "Tour deleted successfully",
-      });
+      res
+        .status(200)
+        .json({ success: true, message: "Tour deleted successfully" });
     } catch (err) {
-      console.error("Error deleting tour:", err.message);
+      console.error(err);
       next(err);
     }
   }

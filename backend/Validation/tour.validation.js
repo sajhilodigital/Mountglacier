@@ -1,9 +1,6 @@
 // backend/validators/tourSchemas.ts
 import * as yup from "yup";
 
-
-
-// Tour validation schema
 export const tourSchema = yup.object({
   code: yup.string().required("Code is required"),
   title: yup.string().required("Title is required"),
@@ -16,7 +13,7 @@ export const tourSchema = yup.object({
   durationDays: yup.number().positive().optional(),
   grade: yup
     .string()
-    .oneOf(["easy", "moderate", "strenuous", "challenging"], "Invalid grade") // Added Challenging
+    .oneOf(["easy", "moderate", "strenuous", "challenging"], "Invalid grade")
     .required("Grade is required"),
   priceUSD: yup.number().min(0).optional(),
   priceTiers: yup
@@ -42,6 +39,10 @@ export const tourSchema = yup.object({
         day: yup.number().required(),
         title: yup.string().required(),
         details: yup.string().optional(),
+        images: yup
+          .array()
+          .of(yup.string().url("Must be a valid URL"))
+          .optional(),
       })
     )
     .optional(),

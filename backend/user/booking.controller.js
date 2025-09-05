@@ -22,8 +22,11 @@ router.post(
   validateMongoIdFromReqParams,
   async (req, res) => {
     try {
-      const { travelersCount } = req.body;
-      const { id: tourId } = req.params;
+      const {travelersCount}  = req.body;
+      const  tourId  = req.params.id;
+
+      console.log(travelersCount)
+      console.log(tourId)
 
       // 1️⃣ Validate travelersCount strictly
       if (
@@ -41,7 +44,6 @@ router.post(
       // 2️⃣ Check if tour exists and is active
       const tour = await TourTable.findOne({
         _id: tourId,
-        isActive: true,
       }).lean();
       if (!tour) {
         return res
