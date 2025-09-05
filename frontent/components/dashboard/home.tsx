@@ -29,14 +29,14 @@ export default function Dashboard() {
       <Box className="relative z-10 max-w-7xl mx-auto px-6 md:px-1 ">
         <Typography
           variant="h1"
-          className="!font-bold text-6xl md:text-6xl leading-tight drop-shadow-lg"
+          className="!font-bold !text-4xl md:!text-6xl leading-tight drop-shadow-lg pt-72 md:pt-12 "
         >
           Discover Your Next <span className="text-orange-400">Adventure</span>
         </Typography>
 
         <Typography
           variant="body1"
-          className="mt-4 !text-2xl md:w-2/3 text-gray-200 drop-shadow-md"
+          className="mt-4 !text-lg md:w-2/3 text-gray-200 drop-shadow-md"
         >
           From pristine beaches to majestic mountains, create unforgettable
           memories with our expertly curated travel experiences.
@@ -54,7 +54,7 @@ export default function Dashboard() {
           </Link>
           <Button
             variant="outlined"
-            className="border-white text-white normal-case px-6 py-3 shadow-lg hover:bg-white/10"
+            className="border-white text-blue-50 normal-case px-6 py-3 shadow-lg hover:bg-white/10 !bg-blue-100"
           >
             Plan Your Trip
           </Button>

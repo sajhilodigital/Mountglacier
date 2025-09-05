@@ -37,7 +37,7 @@ const destinations = [
 
 export default function FeaturedDestinations() {
   return (
-    <Box className="py-16 px-6 bg-gradient-to-b from-white via-gray-50 to-gray-100 text-center">
+    <Box className=" from-white via-gray-50 to-gray-100 text-center max-w-7xl mx-auto">
       {/* Title */}
       <Typography
         variant="h4"
@@ -54,7 +54,7 @@ export default function FeaturedDestinations() {
       {/* Subtitle */}
       <Typography
         variant="body1"
-        className="mb-12 text-gray-600 max-w-3xl mx-auto leading-relaxed"
+        className="mb-12 text-gray-600  flex items-center justify-center py-6"
       >
         Discover our handpicked trekking and tour packages in Nepal, Bhutan, and
         Tibet. From the Himalayas to cultural tours, find your perfect adventure
@@ -88,7 +88,7 @@ export default function FeaturedDestinations() {
           return (
             <Card
               key={index}
-              className="relative rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition-all duration-500"
+              className="relative rounded-lg overflow-hidden shadow-md group hover:shadow-xl transition-all duration-500 p-0"
               style={{ gridArea: gridAreas[index] }}
             >
               {/* Background Image */}
@@ -102,12 +102,12 @@ export default function FeaturedDestinations() {
                   className="object-cover transition-transform duration-500 group-hover:scale-110 "
                 />
                 {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500"></div>
+                <div className=" h-full w-full absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500"></div>
               </div>
 
               {/* Title Button */}
               <CardContent className="absolute bottom-5 left-5">
-                <Link href={dest.link}>
+                <Link href="/destination/travel">
                   <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-5 py-2 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
                     {dest.name}
                   </Button>

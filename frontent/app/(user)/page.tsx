@@ -13,8 +13,8 @@ const home = () => {
     <div>
       <Dashboard />
       <FeaturedDestinations />
-      <Tour />
       <AboutPreview />
+      <Tour />
       <Services />
       <AdventureFeatures />
       <ContactSection />
