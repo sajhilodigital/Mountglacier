@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/navbar/header";
 import Footer from "@/components/navbar/footer";
+import { Toaster } from "sonner";
+import ReactQueryClientProvider from "@/provider/QueryClientProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,13 +16,41 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// layout.tsx or layout.js
 export const metadata: Metadata = {
-  title: "Glacier Trekking Adventures", // Custom title
-  description: "Explore the mountains with us",
+  title: {
+    default: "Glacier Trekking Adventures",
+    template: "%s | Glacier Trekking Adventures",
+  },
+  description: "Explore the mountains with us — guided treks, tours, and adventures.",
+  keywords: ["trekking", "mountains", "adventures", "glacier tours"],
+  openGraph: {
+    title: "Glacier Trekking Adventures",
+    description: "Join us for unforgettable glacier and mountain treks.",
+    url: "https://yourdomain.com",
+    siteName: "Glacier Trekking Adventures",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Glacier Trekking Adventures Logo",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Glacier Trekking Adventures",
+    description: "Explore the mountains with us.",
+    images: ["/logo.png"],
+  },
   icons: {
-    icon: "/logo.png", // Use your logo.png in the public folder
+    icon: "/logo.png",
   },
 };
+
 
 export default function RootLayout({
   children,
@@ -34,9 +64,8 @@ export default function RootLayout({
       >
         {/* Header stays fixed at the top */}
         <Header />
-        {/* Add padding so content doesn’t hide behind the header */}
-        <main className="pt-16">{children}</main>
-        {/* Footer */}
+        <Toaster />
+          <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
         <Footer />
       </body>
     </html>

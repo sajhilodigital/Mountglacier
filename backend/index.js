@@ -1,80 +1,103 @@
-import express, { json } from "express";
-import connectDB from "./DBconnection.js";
-import cors from "cors";
-// import helmet from "helmet";
-// import morgan from "morgan";
-// import rateLimit from "express-rate-limit";
-// import mongoSanitize from "express-mongo-sanitize";
-// import xss from "xss-clean";
-// import hpp from "hpp";
-// import compression from "compression";
-import dotenv from "dotenv";
-import { userController } from "./user/user.controller.js";
-import cookieParser from "cookie-parser";
 
-// Load env variables securely
+// import compression from "compression";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+// import rateLimit from "express-rate-limit";
+// import helmet from "helmet";
+// import hpp from "hpp";
+// import morgan from "morgan";
+// import xss from "xss";
+import connectDB from "./DBconnection.js";
+import { userController } from "./user/user.controller.js";
+// import { sanitizeRequest, sanitizeXSS } from "./middleware/InjuctionPrevention.js";
+import { tourController } from "./user/tour.controller.js";
+import { bookingController } from "./user/booking.controller.js";
+
+// Load env variables
 dotenv.config();
 
 // Initialize app
-const app = express(json());
+const app = express();
+
+// ------------------------ MIDDLEWARE ------------------------ //
+
+// Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Cookie parser
 app.use(cookieParser());
 
-// 1. Connect database
+// Connect to MongoDB
 await connectDB();
 
-// 2. Trust proxy (important for reverse proxy setups, e.g. Nginx, Vercel, Render)
-// app.set("trust proxy", 1);
+// ------------------------ SECURITY ------------------------ //
 
-// 3. Middleware
-// app.use(express.json({ limit: "10kb" })); // Prevent large payload attacks
-
-// Security headers
+// Set security HTTP headers
 // app.use(helmet());
 
-// Enable CORS for multiple environments
+// Enable CORS for frontend domains
 app.use(
   cors({
     origin: [
       process.env.CLIENT_URL || "http://localhost:3000",
       "http://localhost:3001",
     ],
-    credentials: true, // allow cookies, auth headers
+    credentials: true,
   })
 );
 
 // Prevent NoSQL injection
-// app.use(mongoSanitize());
+// app.use(express.json());
+// app.use(sanitizeRequest);
+// app.use(sanitizeXSS);
 
-// Prevent XSS attacks
+
+// Prevent XSS attacks 
+// todo: fix issue prevent attack
+
 // app.use(xss());
 
 // Prevent HTTP parameter pollution
 // app.use(hpp());
 
-// Gzip compression for faster responses
+// Gzip compression
 // app.use(compression());
 
-// Logging (only in dev)
+// ------------------------ LOGGING ------------------------ //
+
+// Only in development
 // if (process.env.NODE_ENV === "development") {
 //   app.use(morgan("dev"));
 // }
 
-// Rate limiting (protect from brute-force/DDoS)
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 min
-//   max: 100, // limit each IP to 100 requests
-//   message: "Too many requests from this IP, try again later.",
+// ------------------------ RAhttp://localhost:8000/auth/api/tour/get-detail/68baa2f8e6c40e8ece4b4fb1TE LIMIT ------------------------ //
+
+// const apiLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100, // limit each IP to 100 request per window
+//   message: {
+//     success: false,
+//     message: "Too many request from this IP, try again later.",
+//   },
+//   standardHeaders: true,
+//   legacyHeaders: false,
 // });
-// app.use("/api", limiter);
+// app.use("/api", apiLimiter);
 
-// 4. Routes
-app.use(userController);
+// ------------------------ ROUTES ------------------------ //
 
-// 5. Global error handler
+// Prefix all user routes
+app.use("/auth/api", userController);
+app.use("/auth/api", tourController);
+app.use("/auth/api", bookingController);
+
+// ------------------------ GLOBAL ERROR HANDLER ------------------------ //
+
 // app.use((err, req, res, next) => {
-//   console.error(err.stack);
+//   console.error("Global Error Handler:", err.stack);
 //   res.status(500).json({
 //     success: false,
 //     message: "Something went wrong!",
@@ -82,10 +105,14 @@ app.use(userController);
 //   });
 // });
 
-// 6. Start server
-const PORT = process.env.PORT || 8000;
+// ------------------------ START SERVER ------------------------ //
+
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(
-    `✅ Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
+    `✅ Server running in ${
+      process.env.NODE_ENV || "development"
+    } mode on port ${PORT}`
   );
 });

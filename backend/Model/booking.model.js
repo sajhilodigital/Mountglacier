@@ -1,3 +1,4 @@
+// backend/booking/booking.model.js
 import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema(
@@ -14,11 +15,13 @@ const bookingSchema = new mongoose.Schema(
       enum: ["unpaid", "paid", "refunded"],
       default: "unpaid",
     },
-    travelersCount: { type: Number, required: true },
+    travelersCount: { type: Number, required: true, min: 1 },
     bookedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
 
-const BookingTable = mongoose.model("Booking", bookingSchema);
+const BookingTable =
+  mongoose.models.Booking || mongoose.model("Booking", bookingSchema);
+
 export default BookingTable;

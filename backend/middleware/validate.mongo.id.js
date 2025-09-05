@@ -1,15 +1,12 @@
-import mongoose from 'mongoose';
+// backend/middlewares/validateMongoId.js
+import mongoose from "mongoose";
 
 export const validateMongoIdFromReqParams = (req, res, next) => {
-  // extract id from req.params
   const id = req.params.id;
 
-  // check for mongo id validity
-  const isValidId = mongoose.isValidObjectId(id);
-
-  // if not valid id, throw error
-  if (!isValidId) {
-    return res.status(400).send({ message: 'Invalid id.' });
+  // Check if id is a valid MongoDB ObjectId
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({ success: false, message: "Invalid ID." });
   }
 
   next();

@@ -1,12 +1,19 @@
-const validateReqBody = (validationSchema) => {
+// backend/middlewares/validateReqBody.js
+
+const validateReqBody = (schema) => {
   return async (req, res, next) => {
     try {
-      const validatedData = await validationSchema.validate(req.body);
-
-      req.body = validatedData;
+      await schema.validate(req.body, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
       next();
-    } catch (error) {
-      return res.status(400).send({ message: error.message });
+    } catch (err) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation failed",
+        errors: err.errors || ["Invalid request body"],
+      });
     }
   };
 };

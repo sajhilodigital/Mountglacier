@@ -211,17 +211,17 @@ export default function Header() {
             >
               <MenuItem
                 component={Link}
-                href="/register"
-                onClick={handleUserMenuClose}
-              >
-                Sign In
-              </MenuItem>
-              <MenuItem
-                component={Link}
                 href="/login"
                 onClick={handleUserMenuClose}
               >
-                Sign Up
+                Login
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                href="/register"
+                onClick={handleUserMenuClose}
+              >
+                Register
               </MenuItem>
             </Menu>
           </Box>
@@ -247,17 +247,17 @@ export default function Header() {
               >
                 <MenuItem
                   component={Link}
-                  href="/register"
-                  onClick={handleUserMenuClose}
-                >
-                  Sign In
-                </MenuItem>
-                <MenuItem
-                  component={Link}
                   href="/login"
                   onClick={handleUserMenuClose}
                 >
-                  Sign Up
+                  Login
+                </MenuItem>
+                <MenuItem
+                  component={Link}
+                  href="/register"
+                  onClick={handleUserMenuClose}
+                >
+                  Register
                 </MenuItem>
               </Menu>
             </Box>

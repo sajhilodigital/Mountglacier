@@ -1,5 +1,9 @@
+// backend/validators/userSchemas.ts
 import * as yup from "yup";
 
+// User roles type
+
+// Registration schema
 export const userRegisterSchema = yup.object({
   name: yup.string().trim().required("Name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -11,11 +15,18 @@ export const userRegisterSchema = yup.object({
     .matches(/[0-9]/, "Must contain a number")
     .matches(/[@$!%*?&#]/, "Must contain a special character")
     .required("Password is required"),
-  phone: yup.string().matches(/^[0-9]{7,15}$/, "Invalid phone number"),
-  role: yup.string().oneOf(["traveler", "admin", "guide"]).default("traveler"),
-  profilePic: yup.string().url("Must be a valid URL").nullable(),
+  phone: yup
+    .string()
+    .matches(/^[0-9]{7,15}$/, "Invalid phone number")
+    .optional(),
+  role: yup
+    .string()
+    .oneOf(["traveler", "admin", "guide"])
+    .default("traveler"),
+  profilePic: yup.string().url("Must be a valid URL").nullable().optional(),
 });
 
+// Login schema
 export const loginSchema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
   password: yup
