@@ -92,21 +92,14 @@ export default function FeaturedDestinations() {
               style={{ gridArea: gridAreas[index] }}
             >
               {/* Background Image */}
-<<<<<<< HEAD
-              <div className="relative h-full w-full">
-=======
+
               <div className="relative h-full  w-full">
->>>>>>> pramod
                 <Image
                   src={dest.img}
                   alt={dest.name}
                   fill
                   priority
-<<<<<<< HEAD
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
-=======
-                  className="object-cover transition-transform duration-500 group-hover:scale-110 "
->>>>>>> pramod
                 />
                 {/* Overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500"></div>
