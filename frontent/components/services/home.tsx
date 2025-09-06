@@ -61,7 +61,7 @@ export default function Services() {
       </Typography>
 
       {/* Services Cards */}
-      <Box className="flex flex-wrap justify-center gap-6 mt-7">
+      <Box className="flex flex-wrap justify-center max-w-7xl mx-auto gap-6 mt-7">
         {services.map((service, i) => (
           <Link href={service.link} key={i} className="no-underline">
             <Card className="w-72 p-6 text-center shadow-md rounded-xl transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer">

@@ -8,12 +8,12 @@ import Image from "next/image";
 
 export default function AboutPreview() {
   return (
-    <Box className="py-16 px-6 bg-gray-50">
+    <Box className="py-16 px-6 bg-gray-50 ">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         {/* Left Content */}
         <div>
           {/* Logo + Company Name */}
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center  gap-3 mb-6 ">
             <Image src="/logo1.png" alt="Company Logo" width={60} height={60} />
             <Typography variant="h5" className="font-bold text-gray-800">
               Mount Glacier Alpine Adventure Trek and Tours
@@ -26,7 +26,7 @@ export default function AboutPreview() {
           </Typography>
 
           {/* Description */}
-          <Typography variant="body1" className="text-gray-600 mb-6">
+          <Typography variant="body1" className="text-gray-600 mb-6 ">
             For over 15 years, Mount Glacier Alpine Adventure Trek and Tours has
             been crafting extraordinary Himalayan and worldwide travel
             experiences. From solo adventures to family tours, we specialize in
