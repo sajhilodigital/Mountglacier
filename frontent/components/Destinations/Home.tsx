@@ -39,28 +39,29 @@ export default function FeaturedDestinations() {
   return (
     <Box className="py-16 px-6 bg-gradient-to-b from-white via-gray-50 to-gray-100 text-center">
       {/* Title */}
-      <Typography
-        variant="h4"
-        className="font-extrabold mb-4 text-3xl md:text-4xl"
-        sx={{
-          background: "linear-gradient(90deg, #0f172a, #1e3a8a, #f59e0b)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-        }}
-      >
-        Top Destinations With Best Trekking Company In Nepal
-      </Typography>
+      <div className="flex flex-col items-center justify-center mb-6">
+        <Typography
+          variant="h4"
+          className="font-extrabold mb-4 text-3xl md:text-4xl"
+          sx={{
+            background: "linear-gradient(90deg, #0f172a, #1e3a8a, #f59e0b)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          Top Destinations With Best Trekking Company In Nepal
+        </Typography>
 
-      {/* Subtitle */}
-      <Typography
-        variant="body1"
-        className="mb-12 text-gray-600 max-w-3xl mx-auto leading-relaxed"
-      >
-        Discover our handpicked trekking and tour packages in Nepal, Bhutan, and
-        Tibet. From the Himalayas to cultural tours, find your perfect adventure
-        with us.
-      </Typography>
-
+        {/* Subtitle */}
+        <Typography
+          variant="body1"
+          className="mb-12 text-gray-600 max-w-7xl mx-auto leading-relaxed py-4"
+        >
+          Discover our handpicked trekking and tour packages in Nepal, Bhutan,
+          and Tibet. From the Himalayas to cultural tours, find your perfect
+          adventure with us.
+        </Typography>
+      </div>
       {/* Explore All button */}
       <div className="flex justify-end mb-10">
         <Link href="/destination">
@@ -72,7 +73,7 @@ export default function FeaturedDestinations() {
 
       {/* Custom Grid with center large card */}
       <div
-        className="grid gap-6"
+        className="grid gap-2"
         style={{
           display: "grid",
           gridTemplateAreas: `
