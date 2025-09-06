@@ -93,13 +93,21 @@ export default function FeaturedDestinations() {
             >
               {/* Background Image */}
 
+<<<<<<< HEAD
               <div className="relative h-full w-full">
+=======
+              <div className="relative h-full  w-full">
+>>>>>>> balgobind
                 <Image
                   src={dest.img}
                   alt={dest.name}
                   fill
                   priority
+<<<<<<< HEAD
                   className="object-cover transition-transform duration-500 group-hover:scale-110 "
+=======
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+>>>>>>> balgobind
                 />
                 {/* Overlay gradient */}
                 <div className=" h-full w-full absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500"></div>
