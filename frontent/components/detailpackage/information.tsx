@@ -56,7 +56,7 @@ export default function InformationPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 px-6 py-12">
+    <div className="min-h-screen bg-transparent px-6 py-12">
       <h1 className="text-4xl md:text-5xl font-extrabold text-center text-indigo-700 mb-12">
         Mustang Tiji Festival Information
       </h1>
@@ -65,7 +65,7 @@ export default function InformationPage() {
         {infoSections.map((section, index) => (
           <Card
             key={section.id}
-            className={`shadow-lg hover:shadow-xl transition-all duration-300 
+            className={`shadow-3xl hover:shadow-xl transition-all duration-300 bg-gray-50 rounded-lg 
               ${
                 index % 3 === 0
                   ? "md:col-span-2 lg:col-span-2"

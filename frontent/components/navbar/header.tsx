@@ -24,6 +24,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useTheme } from "@mui/material/styles";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -37,12 +38,16 @@ export default function Header() {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const pathname = usePathname();
+
+  const isHomePage = pathname === "/";
 
   useEffect(() => {
+    if (!isHomePage) return; // only add scroll effect on home page
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHomePage]);
 
   const menuItems = [
     { label: "Home", href: "/" },
@@ -152,26 +157,33 @@ export default function Header() {
 
   return (
     <>
-      {/* Top scrolling text using Tailwind */}
-      <div className="fixed top-0 w-full bg-[#003366] overflow-hidden z-50">
-        <div className="animate-scrollText whitespace-nowrap font-bold text-white py-2 px-2 text-lg">
-          Mount Glacier Alpine Adventure Trek and Tours – Explore Nepal, Bhutan
-          & Tibet with Us!
-          <span className="px-60">
-            “माउन्ट ग्लासियर अल्पाइन एडभेन्चर ट्रेक एण्ड टुर्स – नेपाल, भूटान र
-            तिब्बतको अन्वेषण गर्नुहोस्!”
-          </span>
+      {/* Top scrolling text (only show on homepage) */}
+      {isHomePage && (
+        <div className="fixed top-0 w-full bg-[#003366] overflow-hidden z-50">
+          <div className="animate-scrollText whitespace-nowrap font-bold text-white py-2 px-2 text-lg">
+            Mount Glacier Alpine Adventure Trek and Tours – Explore Nepal,
+            Bhutan & Tibet with Us!
+            <span className="px-60">
+              “माउन्ट ग्लासियर अल्पाइन एडभेन्चर ट्रेक एण्ड टुर्स – नेपाल, भूटान
+              र तिब्बतको अन्वेषण गर्नुहोस्!”
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Navbar below scrolling text */}
+      {/* Navbar */}
       <AppBar
         position="fixed"
         sx={{
-          top: "42px",
-          backgroundColor: scrolled ? "#e6f2ff" : "transparent",
-          boxShadow: scrolled ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
-          transition: "all 0.04s ease",
+          top: isHomePage ? "42px" : "0px",
+          backgroundColor: isHomePage
+            ? scrolled
+              ? "#e6f2ff"
+              : "transparent"
+            : "#e6f2ff",
+          boxShadow:
+            scrolled || !isHomePage ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
+          transition: "all 0.2s ease",
           zIndex: 40,
         }}
         className="px-4 md:px-16"
@@ -189,9 +201,14 @@ export default function Header() {
             </Link>
           </Box>
 
+          {/* Desktop Menu */}
           <Box
             className={`hidden md:flex space-x-6 font-medium items-center ${
-              scrolled ? "text-black" : "text-white"
+              isHomePage
+                ? scrolled
+                  ? "text-black"
+                  : "text-white"
+                : "text-black"
             }`}
           >
             {menuItems.map((item) =>
@@ -200,35 +217,36 @@ export default function Header() {
                   {item.label}
                 </Link>
               ) : (
-                <Box
-                  key={item.label}
-                  onMouseEnter={(e) => handleMenuOpen(e, item.label)}
-                  onMouseLeave={handleMenuClose}
-                  className="relative"
-                >
-                  <Link href={item.href}>{item.label}</Link>
-                  <Menu
-                    anchorEl={menuAnchorEl}
-                    open={activeMenu === item.label}
-                    onClose={handleMenuClose}
-                    MenuListProps={{ onMouseLeave: handleMenuClose }}
+                <Box key={item.label} className="relative group">
+                  <Box className="flex items-center cursor-pointer">
+                    <Link href={item.href}>{item.label}</Link>
+                    <ExpandMoreIcon
+                      className="ml-1 transition-transform duration-300 group-hover:rotate-180"
+                      fontSize="small"
+                    />
+                  </Box>
+
+                  {/* Custom dropdown with animation */}
+                  <Box
+                    className="absolute left-0 mt-2 w-40 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible 
+          transition-all duration-300 ease-in-out transform scale-y-0 group-hover:scale-y-100 origin-top"
                   >
                     {item.subItems.map((sub) => (
-                      <MenuItem
+                      <Link
                         key={sub.label}
-                        component={Link}
                         href={sub.href}
-                        onClick={handleMenuClose}
+                        className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                       >
                         {sub.label}
-                      </MenuItem>
+                      </Link>
                     ))}
-                  </Menu>
+                  </Box>
                 </Box>
               )
             )}
           </Box>
 
+          {/* Right Side */}
           <Box className="hidden md:flex items-center space-x-4">
             <Button
               component={Link}
@@ -245,7 +263,13 @@ export default function Header() {
             </Button>
             <IconButton
               onClick={handleUserMenuOpen}
-              className={scrolled ? "text-black" : "text-white"}
+              className={
+                isHomePage
+                  ? scrolled
+                    ? "text-black"
+                    : "text-white"
+                  : "text-black"
+              }
             >
               <AccountCircle fontSize="large" />
             </IconButton>
@@ -271,18 +295,31 @@ export default function Header() {
             </Menu>
           </Box>
 
+          {/* Mobile Menu */}
           {isMobile && (
             <Box className="flex items-center space-x-2">
               <IconButton
                 onClick={handleUserMenuOpen}
-                className={scrolled ? "text-black" : "text-white"}
+                className={
+                  isHomePage
+                    ? scrolled
+                      ? "text-black"
+                      : "text-white"
+                    : "text-black"
+                }
               >
                 <AccountCircle fontSize="large" />
               </IconButton>
               <IconButton
                 edge="end"
                 onClick={handleDrawerToggle}
-                className={scrolled ? "text-black" : "text-white"}
+                className={
+                  isHomePage
+                    ? scrolled
+                      ? "text-black"
+                      : "text-white"
+                    : "text-black"
+                }
               >
                 <MenuIcon />
               </IconButton>
@@ -311,6 +348,7 @@ export default function Header() {
         </Toolbar>
       </AppBar>
 
+      {/* Drawer for Mobile */}
       {isMobile && (
         <Drawer
           anchor="right"
@@ -322,7 +360,7 @@ export default function Header() {
         </Drawer>
       )}
 
-      {/* Tailwind keyframes */}
+      {/* Tailwind animation */}
       <style>
         {`
           @keyframes scrollText {

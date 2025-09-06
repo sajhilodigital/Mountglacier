@@ -117,7 +117,7 @@ export default function AdventurePage() {
   return (
     <div className="w-full bg-gray-50">
       {/* Adventure Features Section */}
-      <section className="w-full px-6 py-12">
+      <section className="w-full px-6 py-12 max-w-7xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-2xl font-bold">
             Why Choose <span className="text-blue-500">Our Adventures</span>

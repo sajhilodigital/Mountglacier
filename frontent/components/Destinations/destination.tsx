@@ -19,7 +19,7 @@ export default function TourDetaildestination() {
 
   return (
     <div className="w-full p-6 mt-6">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Sidebar Filter */}
         <aside className="bg-gray-100 p-6 rounded-2xl shadow-md lg:col-span-1">
           <h2 className="text-xl font-semibold mb-4">Filter by Category</h2>
@@ -42,14 +42,14 @@ export default function TourDetaildestination() {
           {filteredTours.map((tour) => (
             <Card
               key={tour.title}
-              className="overflow-hidden shadow-md rounded-2xl hover:shadow-xl hover:scale-[1.02] transition duration-300"
+              className="overflow-hidden shadow-md rounded-2xl hover:shadow-xl hover:scale-[1.02] transition duration-300 !p-0"
             >
               {/* Image */}
               <div className="relative h-52 w-full">
                 <Image
-                height={0}
-                width={0}
-                sizes="100%"
+                  height={0}
+                  width={0}
+                  sizes="100%"
                   src={tour.image}
                   alt={tour.title}
                   className="w-full h-full object-cover"
