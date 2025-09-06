@@ -1,4 +1,3 @@
-// backend/tour/tour.model.js
 import mongoose from "mongoose";
 
 const tourSchema = new mongoose.Schema(
@@ -9,13 +8,14 @@ const tourSchema = new mongoose.Schema(
     region: { type: String },
     description: { type: String },
     durationDays: { type: Number },
-    grade: { type: String, enum: ["Easy", "Moderate", "Strenuous"] },
+    grade: {
+      type: String,
+      enum: ["easy", "moderate", "risky", "challenging"], 
+      required: true,
+    },
     priceUSD: { type: Number },
     priceTiers: [
-      {
-        groupSize: { type: String },
-        priceUSD: { type: Number },
-      },
+      { groupSize: String, priceUSD: Number },
     ],
     season: [{ type: String }],
     included: [{ type: String }],
@@ -29,14 +29,22 @@ const tourSchema = new mongoose.Schema(
         day: { type: Number },
         title: { type: String },
         details: { type: String },
+        images: [
+          {
+            url: { type: String, required: true },
+            public_id: { type: String, required: true },
+          },
+        ],
       },
     ],
-    images: [{ type: String }],
+    images: [
+      { url: String, public_id: String }
+    ],
     reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
 
 const TourTable = mongoose.models.Tour || mongoose.model("Tour", tourSchema);
-
 export default TourTable;
