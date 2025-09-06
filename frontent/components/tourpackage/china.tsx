@@ -3,12 +3,13 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
-import { Chip } from "@mui/material";
+import { Star, MapPin } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const chinaTours = [
   {
+    id: 1,
     title: "Mansarovar Lake Trek",
     location: "Mansarovar, Tibet, China",
     rating: 4.8,
@@ -30,6 +31,7 @@ const chinaTours = [
     category: "Adventure",
   },
   {
+    id: 2,
     title: "Everest Tibet Base Camp",
     location: "Tibet, China",
     rating: 4.9,
@@ -51,6 +53,7 @@ const chinaTours = [
     category: "Adventure",
   },
   {
+    id: 3,
     title: "Lhasa City Tour",
     location: "Lhasa, Tibet, China",
     rating: 4.7,
@@ -72,6 +75,7 @@ const chinaTours = [
     category: "Tour",
   },
   {
+    id: 4,
     title: "Tibet High Pass Trek",
     location: "Tibet, China",
     rating: 4.8,
@@ -95,9 +99,10 @@ const chinaTours = [
 ];
 
 export default function ChinaTrek() {
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const categories = ["All", "Adventure", "Tour"];
+  const categories = ["All", "Adventure", "Tour"] as const;
 
   const filteredTours =
     selectedCategory === "All"
@@ -107,12 +112,13 @@ export default function ChinaTrek() {
   return (
     <div className="p-6 mt-7">
       {/* Category Filter Buttons */}
-      <div className="flex justify-center gap-4 mb-6">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mb-6">
         {categories.map((cat) => (
           <Button
             key={cat}
             variant={selectedCategory === cat ? "default" : "outline"}
             onClick={() => setSelectedCategory(cat)}
+            className="rounded-full px-4"
           >
             {cat}
           </Button>
@@ -120,39 +126,72 @@ export default function ChinaTrek() {
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
         {filteredTours.map((tour, idx) => (
           <Card
             key={idx}
-            className="shadow-lg rounded-2xl overflow-hidden transition-transform transform hover:scale-105 hover:shadow-2xl"
+            className="shadow-lg rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-2xl border border-gray-100/60"
           >
-            <div className="h-40 w-full overflow-hidden">
+            {/* Media with Overlay */}
+            <div className="relative w-full aspect-[16/10]">
               <Image
-                width={0}
-                height={0}
-                sizes="100%"
-                src={tour?.image}
-                alt={tour?.title}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                src={tour.image}
+                alt={tour.title}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover will-change-transform duration-500 ease-out hover:scale-105"
+                priority={idx < 2}
               />
-            </div>
-            <CardContent className="p-4 flex flex-col gap-3">
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold">{tour.title}</h2>
-                <div className="flex items-center gap-1 text-yellow-500">
-                  <Star size={16} />
-                  <span>{tour.rating}</span>
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/40 to-transparent" />
+
+              <div className="absolute top-3 left-3 flex items-center gap-2">
+                {tour.category && (
+                  <span className="text-xs font-semibold tracking-wide uppercase bg-white/90 text-gray-900 px-2.5 py-1 rounded-full shadow-sm backdrop-blur">
+                    {tour.category}
+                  </span>
+                )}
+                {tour.difficulty && (
+                  <span className="text-xs font-semibold bg-blue-600 text-white px-2.5 py-1 rounded-full shadow-sm">
+                    {tour.difficulty}
+                  </span>
+                )}
+              </div>
+
+              <div className="absolute top-3 right-3">
+                <div className="rounded-full bg-white/95 px-3 py-1.5 shadow-sm text-sm font-semibold">
+                  {tour.oldPrice && tour.oldPrice !== tour.price && (
+                    <span className="line-through text-gray-400 mr-1">
+                      ${tour.oldPrice}
+                    </span>
+                  )}
+                  <span className="text-blue-600">From ${tour.price}</span>
                 </div>
               </div>
-              <p className="text-sm text-gray-500">{tour.location}</p>
 
-              <Chip label={tour.difficulty} color="primary" size="small" />
+              <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                <h2 className="text-white text-lg sm:text-xl font-semibold leading-tight line-clamp-2 drop-shadow">
+                  {tour.title}
+                </h2>
+                <div className="mt-1 flex flex-wrap items-center gap-3 text-sm">
+                  <span className="inline-flex items-center gap-1 text-gray-200">
+                    <MapPin size={14} className="shrink-0" />
+                    <span className="line-clamp-1">{tour.location}</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-yellow-300">
+                    <Star size={14} className="shrink-0" />
+                    <span>{tour.rating}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
 
-              {/* Routes */}
-              {tour.routes && (
+            {/* Body */}
+            <CardContent className="p-4 sm:p-5 flex flex-col gap-4">
+              {tour.routes?.length > 0 && (
                 <div>
-                  <h3 className="font-medium mt-2">Routes:</h3>
-                  <ul className="list-disc pl-5 text-sm text-gray-600">
+                  <h3 className="font-medium">Routes</h3>
+                  <ul className="mt-1 list-disc pl-5 text-sm text-gray-600 space-y-0.5">
                     {tour.routes.map((r, i) => (
                       <li key={i}>{r}</li>
                     ))}
@@ -160,28 +199,36 @@ export default function ChinaTrek() {
                 </div>
               )}
 
-              <div>
-                <h3 className="font-medium">Tour Highlights:</h3>
-                <ul className="list-disc pl-5 text-sm text-gray-600">
-                  {tour.highlights.map((h, i) => (
-                    <li key={i}>{h}</li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-gray-700">
+                {tour.days && <li>🗓 {tour.days} Days</li>}
+                {tour.group && <li>👥 {tour.group}</li>}
+                {tour.altitude && <li>⛰ {tour.altitude}</li>}
+                {tour.seasons && <li>🍂 {tour.seasons}</li>}
+              </ul>
 
-              {/* Price on left, Book Now button on right */}
-              <div className="flex justify-between items-center mt-auto">
+              {tour.highlights?.length > 0 && (
                 <div>
-                  {tour.oldPrice !== tour.price && (
-                    <span className="line-through text-gray-400 text-sm mr-2">
-                      ${tour.oldPrice}
-                    </span>
-                  )}
-                  <span className="text-lg font-bold text-blue-600">
-                    From ${tour.price}
-                  </span>
+                  <h3 className="font-medium">Tour Highlights</h3>
+                  <ul className="mt-1 list-disc pl-5 text-sm text-gray-600 space-y-0.5">
+                    {tour.highlights.map((h, i) => (
+                      <li key={i}>{h}</li>
+                    ))}
+                  </ul>
                 </div>
-                <Button className="transition-colors hover:bg-blue-700">
+              )}
+
+              <div className="mt-1 pt-3 border-t flex items-center justify-between gap-3">
+                <Button
+                  variant="outline"
+                  className="font-semibold"
+                  onClick={() => router.push(`/china/${tour?.id}`)}
+                >
+                  View Details
+                </Button>
+                <Button
+                  className="bg-gradient-to-r from-blue-600 to-indigo-500 text-white font-semibold hover:brightness-110"
+                  onClick={() => router.push(`/booknow`)}
+                >
                   Book Now
                 </Button>
               </div>

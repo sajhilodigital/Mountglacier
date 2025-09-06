@@ -7,14 +7,16 @@ import AdventureFeatures from "@/components/whychooseus/home";
 
 import AboutPreview from "@/components/about/aboutpreview";
 import Tour from "@/components/tourpackage/tour";
+import ReviewsSection from "@/components/dashboard/reviewsection";
 
 const home = () => {
   return (
     <div>
       <Dashboard />
       <FeaturedDestinations />
-      <AboutPreview />
+      <ReviewsSection />
       <Tour />
+      <AboutPreview />
       <Services />
       <AdventureFeatures />
       <ContactSection />

@@ -5,58 +5,72 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star, MapPin, Calendar, Users, Mountain } from "lucide-react";
 import { tours } from "@/lib/tourpackage";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function TourDashboard() {
   const [filter, setFilter] = useState("Tour");
+  const router = useRouter();
 
-  // show only tours
-  const filteredTours = tours.filter((t) => t.category === "Tour");
+  // Filter tours dynamically
+  const filteredTours = tours.filter((t) =>
+    filter === "Tour" ? true : t.difficulty === filter
+  );
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full p-6 mt-16 md:mt-24">
       {/* Dashboard Header with Background Image */}
       <div
         className="relative rounded-2xl overflow-hidden mb-8 shadow-lg"
         style={{
-          backgroundImage: "url('/images/tour-bg.jpg')", // 👉 replace with your image
+          backgroundImage: "url('/destination/bhaktapur.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backdropFilter: "brightness(0.7)",
         }}
       >
-        {/* Overlay */}
         <div className="absolute inset-0 bg-black/60" />
 
-        {/* Centered Text */}
-        <div className="relative z-10 text-center text-white px-8 py-16">
-          <h1 className="text-4xl font-bold mb-4">Tour Dashboard</h1>
-          <p className="max-w-3xl mx-auto text-lg leading-relaxed text-gray-100">
-            Welcome to our exclusive <strong>Tours of Nepal</strong> – your
-            gateway to adventure, culture, and unforgettable experiences.
-            <br />
-            From the breathtaking peaks of the Himalayas to the serene valleys
-            dotted with ancient temples, each tour is carefully crafted to offer
-            you the perfect balance of discovery and relaxation.
-            <br />
-            Our professional guides ensure safety and comfort while introducing
-            you to hidden gems and vibrant traditions.
-            <br />
-            Whether you seek thrilling treks, cultural immersion, or peaceful
-            escapes, we have the right journey for you.
-            <br />
-            With flexible packages, small groups, and eco-friendly practices,
-            our tours promise authenticity and comfort.
-            <br />
-            Join us to explore untouched trails, vibrant festivals, and local
-            hospitality like never before.
-            <br />
-            Let every trip be a story you’ll cherish for a lifetime.
-            <br />
-            Book today and unlock the best that Nepal has to offer.
+        <div className="relative z-10 text-center text-white px-8 py-16 mt-6 md:mt-10">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            Explore the Wonders of Nepal
+          </h1>
+
+          <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-4">
+            Your gateway to{" "}
+            <span className="font-semibold">
+              adventure, culture, and unforgettable experiences
+            </span>
+            .
           </p>
+
+          <ul className="list-disc list-inside max-w-3xl mx-auto text-gray-100 space-y-2 mb-4 text-left md:text-center">
+            <li>🏔️ Trek breathtaking Himalayan peaks and serene valleys</li>
+            <li>
+              🕌 Immerse in vibrant festivals, ancient temples, and local
+              traditions
+            </li>
+            <li>
+              🛶 Experience thrilling treks, cultural journeys, and peaceful
+              escapes
+            </li>
+          </ul>
+
+          <p className="max-w-3xl mx-auto text-gray-100 text-md md:text-lg leading-relaxed">
+            Our professional guides ensure safety, comfort, and authentic
+            experiences. Flexible packages, small groups, and eco-friendly
+            practices make every trip unique.
+          </p>
+
+          <div className="mt-6">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full shadow-lg">
+              Book Your Adventure
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Layout with sidebar filter + tour grid */}
+      {/* Layout with Sidebar Filter + Tour Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar Filter */}
         <aside className="bg-gray-100 p-6 rounded-2xl shadow-md lg:col-span-1">
@@ -102,7 +116,10 @@ export default function TourDashboard() {
             >
               {/* Image */}
               <div className="relative h-52 w-full">
-                <img
+                <Image
+                height={0}
+                width={0}
+                sizes="100%"
                   src={tour.image}
                   alt={tour.title}
                   className="w-full h-full object-cover"
@@ -144,7 +161,8 @@ export default function TourDashboard() {
 
               {/* Footer */}
               <CardFooter className="flex justify-between items-center p-4">
-                <Button variant="outline">View Details</Button>
+                <Button variant="outline"
+                onClick={() => router.push(`/destination/${tour?.id}`)}>View Details</Button>
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                   Book Now
                 </Button>

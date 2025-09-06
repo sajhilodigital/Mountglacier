@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
+import Image from "next/image";
 
 type Destination = {
   id: number;
@@ -72,7 +73,10 @@ export default function AdminDestinations() {
       <div className="space-y-6">
         {destinations.map((dest) => (
           <Card key={dest.id} className="overflow-hidden shadow-md">
-            <img
+            <Image 
+            height={0}
+            width={0}
+            sizes="100%"
               src={dest.image}
               alt={dest.title}
               className="w-full h-48 object-cover"

@@ -11,7 +11,7 @@ const destinations = [
   {
     name: "Tour in Nepal",
     img: "/destination/chitwan.jpg", // replace with your actual file name
-    link: "/destination/nepal-tour",
+    link: "/destination/travel",
   },
   {
     name: "Peak Climbing",
@@ -41,7 +41,7 @@ export default function FeaturedDestinations() {
       {/* Title */}
       <Typography
         variant="h4"
-        className="font-extrabold mb-4 text-3xl md:text-4xl"
+        className="font-extrabold mb-4 text-3xl md:text-4xl  md:py-10 "
         sx={{
           background: "linear-gradient(90deg, #0f172a, #1e3a8a, #f59e0b)",
           WebkitBackgroundClip: "text",

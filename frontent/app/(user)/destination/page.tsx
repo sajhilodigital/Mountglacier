@@ -1,12 +1,13 @@
 import HeroSection2112 from "@/components/Destinations/bgimage1";
-// import DestinationsPage from "@/components/Destinations/details";
+import TourDetaildestination from "@/components/Destinations/destination";
+
 import React from "react";
 
 const destination = () => {
   return (
     <div>
       <HeroSection2112 />
-      {/* <DestinationsPage /> */}
+      <TourDetaildestination />
     </div>
   );
 };
