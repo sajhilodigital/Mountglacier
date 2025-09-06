@@ -1,8 +1,11 @@
+import Header from "@/components/navbar/header";
+import AuthGuard from "@/gurd/AuthGurd";
+import GuestGuard from "@/gurd/GuestGurd";
+import ReactQueryClientProvider from "@/provider/QueryClientProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
-import Header from "@/components/navbar/header";
-import Footer from "@/components/navbar/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,12 +35,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Header stays fixed at the top */}
-        <Header />
-        {/* Add padding so content doesn’t hide behind the header */}
-        <main className="pt-16">{children}</main>
-        {/* Footer */}
-        <Footer />
+        <Toaster />
+        <GuestGuard>
+        <AuthGuard>
+          <Header />
+          <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
+        </AuthGuard>
+        </GuestGuard>
       </body>
     </html>
   );

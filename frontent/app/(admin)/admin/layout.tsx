@@ -1,8 +1,10 @@
 // app/layout.tsx
+import AuthGuard from "@/gurd/AuthGurd";
+import ReactQueryClientProvider from "@/provider/QueryClientProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
-import Sidebar from "@/components/Admin/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,15 +34,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex min-h-screen w-full ">
-          {/* Sidebar (fixed on the left) */}
-          <aside className="w-1/10 fixed md:w-64 h-screen z-50  ">
-            <Sidebar />
-          </aside>
-
-          {/* Page content (with left margin so it doesn't overlap sidebar) */}
-          <main className="w-9/10 flex-1 ml-12 md:ml-64 px-4 ">{children}</main>
-        </div>
+        <Toaster />
+        <AuthGuard>
+          <ReactQueryClientProvider>
+            {children}
+          </ReactQueryClientProvider>
+        </AuthGuard>
       </body>
     </html>
   );

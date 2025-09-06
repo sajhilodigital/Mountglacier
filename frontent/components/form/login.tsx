@@ -20,11 +20,12 @@ import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 
 import { Toaster, toast } from "sonner";
-import { LoginRequest, LoginResponse } from "@/lib/interfaces";
+import { LoginResponse } from "@/lib/interfaces";
 import axiosInstance from "@/lib/axiosInstanstance";
 
-
-// ================= SCHEMA =================
+// ========================
+// 🔐 Validation Schema
+// ========================
 const LoginSchema = yup.object({
   email: yup
     .string()
@@ -35,40 +36,40 @@ const LoginSchema = yup.object({
     .string()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters"),
-  remember: yup.boolean().required().default(false),
+  remember: yup.boolean().default(false),
 });
 
 type LoginValues = yup.InferType<typeof LoginSchema>;
 
-// ================= PAGE =================
+// ========================
+// 🔐 Component
+// ========================
 export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const { mutate, isPending } = useMutation<LoginResponse, Error, LoginRequest>(
-    {
-      mutationKey: ["login-user"],
-      mutationFn: async (values: LoginValues): Promise<LoginResponse> => {
-        const res = await axiosInstance.post<LoginResponse>(
-          "/user/login",
-          values
-        );
-        return res.data;
-      },
-      onSuccess: (data) => {
-        if (data.success) {
-          toast.success("Logged in successfully");
-          router.push("/booknow");
-        } else {
-          toast.error(data.message || "Login failed");
-        }
-      },
-      onError: (err) => {
-        // Error is typed as `Error`
-        toast.error(err.message || "Invalid credentials");
-      },
-    }
-  );
+  // ✅ Mutation hook with correct types
+  const { mutate, isPending } = useMutation<LoginResponse, Error, LoginValues>({
+    mutationKey: ["login-user"],
+    mutationFn: async (values: LoginValues): Promise<LoginResponse> => {
+      const response = await axiosInstance.post<LoginResponse>(
+        "/user/login",
+        values
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success("Logged in successfully");
+        router.push("/booknow");
+      } else {
+        toast.error(data.message || "Login failed");
+      }
+    },
+    onError: (err) => {
+      toast.error(err.message || "Invalid credentials");
+    },
+  });
 
   const initialValues: LoginValues = {
     email: "",
@@ -85,6 +86,7 @@ export default function LoginPage() {
           <CardTitle className="text-2xl">Welcome back</CardTitle>
           <CardDescription>Sign in to continue your journey.</CardDescription>
         </CardHeader>
+
         <CardContent>
           <Formik
             initialValues={initialValues}
@@ -132,7 +134,7 @@ export default function LoginPage() {
                       aria-label={
                         showPassword ? "Hide password" : "Show password"
                       }
-                      onClick={() => setShowPassword((s) => !s)}
+                      onClick={() => setShowPassword((prev) => !prev)}
                       className="absolute right-3 top-1/2 -translate-y-1/2"
                     >
                       {showPassword ? (
@@ -169,6 +171,7 @@ export default function LoginPage() {
                   </a>
                 </div>
 
+                {/* Submit Button */}
                 <Button type="submit" className="w-full" disabled={isPending}>
                   {isPending ? "Signing in…" : "Sign in"}
                 </Button>
