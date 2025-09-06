@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -17,21 +17,32 @@ import {
   Menu,
   MenuItem,
   useMediaQuery,
+  Collapse,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useTheme } from "@mui/material/styles";
 
 export default function Header() {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(
-    null
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [openSubmenu, setOpenSubmenu] = useState<{ [key: string]: boolean }>(
+    {}
   );
-  const [activeMenu, setActiveMenu] = React.useState<string | null>(null);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const menuItems = [
     { label: "Home", href: "/" },
@@ -55,7 +66,6 @@ export default function Header() {
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(event.currentTarget);
   const handleUserMenuClose = () => setAnchorEl(null);
-
   const handleMenuOpen = (
     event: React.MouseEvent<HTMLElement>,
     label: string
@@ -63,10 +73,12 @@ export default function Header() {
     setMenuAnchorEl(event.currentTarget);
     setActiveMenu(label);
   };
-
   const handleMenuClose = () => {
     setMenuAnchorEl(null);
     setActiveMenu(null);
+  };
+  const toggleSubmenu = (label: string) => {
+    setOpenSubmenu((prev) => ({ ...prev, [label]: !prev[label] }));
   };
 
   const drawer = (
@@ -87,21 +99,34 @@ export default function Header() {
             ) : (
               <>
                 <ListItem disablePadding>
-                  <ListItemButton component={Link} href={item.href}>
+                  <ListItemButton onClick={() => toggleSubmenu(item.label)}>
                     <ListItemText primary={item.label} />
+                    {openSubmenu[item.label] ? (
+                      <ExpandLessIcon />
+                    ) : (
+                      <ExpandMoreIcon />
+                    )}
                   </ListItemButton>
                 </ListItem>
-                {item.subItems.map((sub) => (
-                  <ListItemButton
-                    key={sub.label}
-                    sx={{ pl: 4 }}
-                    component={Link}
-                    href={sub.href}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <ListItemText primary={sub.label} />
-                  </ListItemButton>
-                ))}
+                <Collapse
+                  in={openSubmenu[item.label]}
+                  timeout="auto"
+                  unmountOnExit
+                >
+                  <List component="div" disablePadding>
+                    {item.subItems.map((sub) => (
+                      <ListItemButton
+                        key={sub.label}
+                        sx={{ pl: 4 }}
+                        component={Link}
+                        href={sub.href}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        <ListItemText primary={sub.label} />
+                      </ListItemButton>
+                    ))}
+                  </List>
+                </Collapse>
               </>
             )}
           </React.Fragment>
@@ -127,13 +152,31 @@ export default function Header() {
 
   return (
     <>
+      {/* Top scrolling text using Tailwind */}
+      <div className="fixed top-0 w-full bg-[#003366] overflow-hidden z-50">
+        <div className="animate-scrollText whitespace-nowrap font-bold text-white py-2 px-2 text-lg">
+          Mount Glacier Alpine Adventure Trek and Tours – Explore Nepal, Bhutan
+          & Tibet with Us!
+          <span className="px-60">
+            “माउन्ट ग्लासियर अल्पाइन एडभेन्चर ट्रेक एण्ड टुर्स – नेपाल, भूटान र
+            तिब्बतको अन्वेषण गर्नुहोस्!”
+          </span>
+        </div>
+      </div>
+
+      {/* Navbar below scrolling text */}
       <AppBar
         position="fixed"
-        sx={{ backgroundColor: "#e6f2ff" }}
-        className="shadow-sm px-4 md:px-16"
+        sx={{
+          top: "42px",
+          backgroundColor: scrolled ? "#e6f2ff" : "transparent",
+          boxShadow: scrolled ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
+          transition: "all 0.04s ease",
+          zIndex: 40,
+        }}
+        className="px-4 md:px-16"
       >
         <Toolbar className="w-full flex justify-between items-center">
-          {/* Logo */}
           <Box className="flex items-center space-x-2">
             <Link href="/" className="flex items-center space-x-2">
               <Image
@@ -146,8 +189,11 @@ export default function Header() {
             </Link>
           </Box>
 
-          {/* Desktop Menu */}
-          <Box className="hidden md:flex space-x-6 text-gray-700 font-medium items-center">
+          <Box
+            className={`hidden md:flex space-x-6 font-medium items-center ${
+              scrolled ? "text-black" : "text-white"
+            }`}
+          >
             {menuItems.map((item) =>
               !item.subItems ? (
                 <Link key={item.label} href={item.href}>
@@ -165,9 +211,7 @@ export default function Header() {
                     anchorEl={menuAnchorEl}
                     open={activeMenu === item.label}
                     onClose={handleMenuClose}
-                    MenuListProps={{
-                      onMouseLeave: handleMenuClose,
-                    }}
+                    MenuListProps={{ onMouseLeave: handleMenuClose }}
                   >
                     {item.subItems.map((sub) => (
                       <MenuItem
@@ -185,7 +229,6 @@ export default function Header() {
             )}
           </Box>
 
-          {/* Desktop Right Side */}
           <Box className="hidden md:flex items-center space-x-4">
             <Button
               component={Link}
@@ -200,8 +243,10 @@ export default function Header() {
             >
               Book Now
             </Button>
-
-            <IconButton onClick={handleUserMenuOpen} className="text-blue-700">
+            <IconButton
+              onClick={handleUserMenuOpen}
+              className={scrolled ? "text-black" : "text-white"}
+            >
               <AccountCircle fontSize="large" />
             </IconButton>
             <Menu
@@ -226,20 +271,21 @@ export default function Header() {
             </Menu>
           </Box>
 
-          {/* Mobile Right Side */}
           {isMobile && (
             <Box className="flex items-center space-x-2">
               <IconButton
                 onClick={handleUserMenuOpen}
-                className="text-blue-700"
+                className={scrolled ? "text-black" : "text-white"}
               >
                 <AccountCircle fontSize="large" />
               </IconButton>
-              <IconButton edge="end" onClick={handleDrawerToggle}>
-                <MenuIcon className="text-blue-700" />
+              <IconButton
+                edge="end"
+                onClick={handleDrawerToggle}
+                className={scrolled ? "text-black" : "text-white"}
+              >
+                <MenuIcon />
               </IconButton>
-
-              {/* Mobile User Menu */}
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
@@ -263,45 +309,8 @@ export default function Header() {
             </Box>
           )}
         </Toolbar>
-
-        {/* Scrolling Text Inside Header */}
-        <Box
-          sx={{
-            backgroundColor: "#003366",
-            color: "white",
-            py: 0.5,
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            position: "relative",
-          }}
-        >
-          <Box
-            sx={{
-              display: "inline-block",
-              px: 2,
-              animation: "scrollText 15s linear infinite",
-              fontWeight: "bold",
-              fontSize: { xs: "20px", md: "16px" },
-              letterSpacing: "1px",
-            }}
-          >
-            Mount Glacier Alpine Adventure Trek and Tours
-          </Box>
-        </Box>
       </AppBar>
 
-      <style jsx global>{`
-        @keyframes scrollText {
-          0% {
-            transform: translateX(100%);
-          }
-          100% {
-            transform: translateX(-100%);
-          }
-        }
-      `}</style>
-
-      {/* Mobile Drawer */}
       {isMobile && (
         <Drawer
           anchor="right"
@@ -312,6 +321,19 @@ export default function Header() {
           {drawer}
         </Drawer>
       )}
+
+      {/* Tailwind keyframes */}
+      <style>
+        {`
+          @keyframes scrollText {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+          }
+          .animate-scrollText {
+            animation: scrollText 45s linear infinite;
+          }
+        `}
+      </style>
     </>
   );
 }

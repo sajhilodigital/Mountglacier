@@ -5,7 +5,7 @@ import { Box, Typography } from "@mui/material";
 export default function HeroSection212() {
   return (
     <Box
-      className="relative w-full h-[90vh] flex items-start justify-start overflow-hidden"
+      className="relative w-full h-[90vh] flex items-start justify-start overflow-hidden mt-16"
       sx={{
         backgroundImage: "url('/dashboard/whychoose.jpeg')",
         backgroundSize: "cover",

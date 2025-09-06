@@ -5,7 +5,7 @@ import { Box, Typography } from "@mui/material";
 export default function HeroSection22() {
   return (
     <Box
-      className="relative w-full h-[90vh]"
+      className="relative w-full h-[90vh] mt-16"
       sx={{
         backgroundImage: "url('/dashboard/about.jpeg')", // 👈 background
         backgroundSize: "cover",

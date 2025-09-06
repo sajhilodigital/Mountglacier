@@ -67,10 +67,7 @@ export default function RegisterForm() {
     },
   });
 
-  const handleSubmit = (
-    values: RegisterValues,
-    _: FormikHelpers<RegisterValues>
-  ) => {
+  const handleSubmit = (values: RegisterValues) => {
     mutate(values);
   };
 
@@ -161,8 +158,6 @@ export default function RegisterForm() {
                   className="text-red-500 text-sm mt-1"
                 />
               </div>
-
-              
 
               {/* Password */}
               <div>
