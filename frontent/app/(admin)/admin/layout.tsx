@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: "Glacier Trekking Adventures",
   description: "Explore the mountains with us",
   icons: {
-    icon: "/logo.png",
+    icon: "/logo1.png",
   },
 };
 

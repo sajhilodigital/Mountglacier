@@ -1,36 +1,36 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
-  Toolbar,
   Box,
-  IconButton,
   Button,
+  Collapse,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
   Menu,
   MenuItem,
+  Toolbar,
   useMediaQuery,
-  Collapse,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  // const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  // const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<{ [key: string]: boolean }>(
     {}
@@ -71,17 +71,17 @@ export default function Header() {
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(event.currentTarget);
   const handleUserMenuClose = () => setAnchorEl(null);
-  const handleMenuOpen = (
-    event: React.MouseEvent<HTMLElement>,
-    label: string
-  ) => {
-    setMenuAnchorEl(event.currentTarget);
-    setActiveMenu(label);
-  };
-  const handleMenuClose = () => {
-    setMenuAnchorEl(null);
-    setActiveMenu(null);
-  };
+  // const handleMenuOpen = (
+  //   event: React.MouseEvent<HTMLElement>,
+  //   label: string
+  // ) => {
+  //   setMenuAnchorEl(event.currentTarget);
+  //   setActiveMenu(label);
+  // };
+  // const handleMenuClose = () => {
+  //   setMenuAnchorEl(null);
+  //   setActiveMenu(null);
+  // };
   const toggleSubmenu = (label: string) => {
     setOpenSubmenu((prev) => ({ ...prev, [label]: !prev[label] }));
   };

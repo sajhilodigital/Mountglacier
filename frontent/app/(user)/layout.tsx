@@ -27,11 +27,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Glacier Trekking Adventures",
     description: "Join us for unforgettable glacier and mountain treks.",
-    url: "https://yourdomain.com",
+    url: "https://sajilodigital.com.np",
     siteName: "Glacier Trekking Adventures",
     images: [
       {
-        url: "/logo.png",
+        url: "/logo1.png",
         width: 1200,
         height: 630,
         alt: "Glacier Trekking Adventures Logo",
@@ -44,10 +44,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Glacier Trekking Adventures",
     description: "Explore the mountains with us.",
-    images: ["/logo.png"],
+    images: ["/logo1.png"],
   },
   icons: {
-    icon: "/logo.png",
+    icon: "/logo1.png",
   },
 };
 

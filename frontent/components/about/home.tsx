@@ -134,17 +134,17 @@ export default function AboutPage() {
               {
                 name: "Pasang Sherpa",
                 role: "Lead Trekking Guide",
-                img: "/guide1.jpg",
+                img: "/logo1.png",
               },
               {
                 name: "Mingma Lama",
                 role: "Expedition Leader",
-                img: "/guide2.jpg",
+                img: "/logo1.png",
               },
               {
                 name: "Anita Gurung",
                 role: "Travel Planner",
-                img: "/guide3.jpg",
+                img: "/logo1.png",
               },
             ].map((person, idx) => (
               <motion.div
