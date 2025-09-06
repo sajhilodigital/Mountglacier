@@ -34,7 +34,7 @@ export default function HeroSection2122() {
           variant="subtitle1"
           className="mt-6 text-lg sm:text-xl md:text-2xl tracking-wide"
         >
-          <span className="text-orange-300">Smooth</span> and{" "}
+          <span className="text-orange-300">Smooth and {""}</span>
           <span className="text-teal-300">Memorable</span>.
         </Typography>
       </Box>
