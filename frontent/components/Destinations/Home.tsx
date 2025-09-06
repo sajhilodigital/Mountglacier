@@ -11,7 +11,7 @@ const destinations = [
   {
     name: "Tour in Nepal",
     img: "/destination/chitwan.jpg", // replace with your actual file name
-    link: "/destination/travel",
+    link: "/destination/nepal-tour",
   },
   {
     name: "Peak Climbing",
@@ -37,11 +37,11 @@ const destinations = [
 
 export default function FeaturedDestinations() {
   return (
-    <Box className=" from-white via-gray-50 to-gray-100 text-center max-w-7xl mx-auto">
+    <Box className="py-16 px-6 bg-gradient-to-b from-white via-gray-50 to-gray-100 text-center">
       {/* Title */}
       <Typography
         variant="h4"
-        className="font-extrabold mb-4 text-3xl md:text-4xl  md:py-10 "
+        className="font-extrabold mb-4 text-3xl md:text-4xl"
         sx={{
           background: "linear-gradient(90deg, #0f172a, #1e3a8a, #f59e0b)",
           WebkitBackgroundClip: "text",
@@ -54,7 +54,7 @@ export default function FeaturedDestinations() {
       {/* Subtitle */}
       <Typography
         variant="body1"
-        className="mb-12 text-gray-600  flex items-center justify-center py-6"
+        className="mb-12 text-gray-600 max-w-3xl mx-auto leading-relaxed"
       >
         Discover our handpicked trekking and tour packages in Nepal, Bhutan, and
         Tibet. From the Himalayas to cultural tours, find your perfect adventure
@@ -88,34 +88,25 @@ export default function FeaturedDestinations() {
           return (
             <Card
               key={index}
-              className="relative rounded-lg overflow-hidden shadow-md group hover:shadow-xl transition-all duration-500 p-0"
+              className="relative rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition-all duration-500 p-0"
               style={{ gridArea: gridAreas[index] }}
             >
               {/* Background Image */}
-
-<<<<<<< HEAD
-              <div className="relative h-full w-full">
-=======
               <div className="relative h-full  w-full">
->>>>>>> balgobind
                 <Image
                   src={dest.img}
                   alt={dest.name}
                   fill
                   priority
-<<<<<<< HEAD
-                  className="object-cover transition-transform duration-500 group-hover:scale-110 "
-=======
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
->>>>>>> balgobind
                 />
                 {/* Overlay gradient */}
-                <div className=" h-full w-full absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500"></div>
               </div>
 
               {/* Title Button */}
               <CardContent className="absolute bottom-5 left-5">
-                <Link href="/destination/travel">
+                <Link href={dest.link}>
                   <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-5 py-2 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
                     {dest.name}
                   </Button>

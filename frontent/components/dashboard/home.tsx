@@ -25,18 +25,13 @@ export default function Dashboard() {
       <Box className="absolute inset-0 bg-black/60"></Box>
 
       {/* Content */}
-<<<<<<< HEAD
 
       <Box className="relative z-10 max-w-7xl mx-auto px-6 md:px-1 ">
+        
         <Typography
           variant="h1"
           className="!font-bold !text-4xl md:!text-6xl leading-tight drop-shadow-lg pt-72 md:pt-12 "
-=======
- <Box className="relative z-10 max-w-6xl mx-auto px-6 md:px-12">
-        <Typography
-          variant="h1"
-          className="!font-bold text-6xl md:text-6xl leading-tight drop-shadow-lg"
->>>>>>> balgobind
+       
         >
           Discover Your Next <span className="text-orange-400">Adventure</span>
         </Typography>
@@ -47,8 +42,7 @@ export default function Dashboard() {
         >
           From pristine beaches to majestic mountains, create unforgettable
           memories with our expertly curated travel experiences.
-        </Typography>
-
+     </Typography>
         {/* Buttons */}
         <Box className="flex flex-col sm:flex-row gap-4 mt-6">
           <Link href="/destination" passHref>
