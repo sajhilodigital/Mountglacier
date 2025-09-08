@@ -1,34 +1,69 @@
 "use client";
 
-import React, { useState } from "react";
-import { Box, Typography, TextField } from "@mui/material";
+import React from "react";
+import { Box, Typography } from "@mui/material";
+import {
+  Users,
+  TicketPercent,
+  Map,
+  PartyPopper,
+  Globe2,
+  Heart,
+  Star,
+  Calendar,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Users, TicketPercent, Map, PartyPopper } from "lucide-react";
+import { useRouter } from "next/navigation"; // <-- import useRouter
 
 export default function GroupTravel() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    groupSize: "",
-    destination: "",
-    message: "",
-  });
+  const router = useRouter(); // <-- initialize router
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Group Travel Request:", form);
-    alert("Thank you! We’ll get back to you with group travel offers.");
-  };
+  const benefits = [
+    {
+      icon: <Users className="w-10 h-10 text-orange-600 mx-auto mb-3" />,
+      title: "Bigger Savings",
+      desc: "Special discounts for groups of 5+ travelers.",
+    },
+    {
+      icon: <TicketPercent className="w-10 h-10 text-green-600 mx-auto mb-3" />,
+      title: "Exclusive Offers",
+      desc: "Complimentary add-ons and group perks.",
+    },
+    {
+      icon: <Map className="w-10 h-10 text-blue-600 mx-auto mb-3" />,
+      title: "Custom Routes",
+      desc: "Tailor-made itineraries for your group’s needs.",
+    },
+    {
+      icon: <PartyPopper className="w-10 h-10 text-purple-600 mx-auto mb-3" />,
+      title: "Fun Experiences",
+      desc: "Team bonding, adventure, and cultural activities.",
+    },
+    {
+      icon: <Globe2 className="w-10 h-10 text-teal-600 mx-auto mb-3" />,
+      title: "Explore Destinations",
+      desc: "Discover hidden gems in Nepal, Bhutan, Tibet, and beyond.",
+    },
+    {
+      icon: <Heart className="w-10 h-10 text-red-500 mx-auto mb-3" />,
+      title: "Shared Memories",
+      desc: "Create unforgettable moments with your loved ones.",
+    },
+    {
+      icon: <Star className="w-10 h-10 text-yellow-500 mx-auto mb-3" />,
+      title: "Top-rated Services",
+      desc: "Quality accommodation, guided tours, and professional support.",
+    },
+    {
+      icon: <Calendar className="w-10 h-10 text-indigo-500 mx-auto mb-3" />,
+      title: "Flexible Scheduling",
+      desc: "Choose dates that work best for your group’s availability.",
+    },
+  ];
 
   return (
-    <Box className="py-16 px-6 bg-gradient-to-b from-orange-50 to-orange-100">
-      <div className="max-w-6xl mx-auto">
+    <Box className="py-16 px-6 bg-gradient-to-b from-orange-50 to-orange-100 mt-16">
+      <div className="max-w-7xl mx-auto">
         {/* Heading */}
         <Typography
           variant="h4"
@@ -36,125 +71,92 @@ export default function GroupTravel() {
         >
           👥 Group Travelling Packages
         </Typography>
-        <Typography variant="body1" className="text-center text-gray-600 mb-12">
-          Planning a trip with friends, family, or colleagues? Get **exclusive
-          discounts, custom itineraries, and unforgettable shared experiences**
-          with our group travel offers.
+
+        {/* Intro Text */}
+        <Typography
+          variant="body1"
+          className="text-center text-gray-700 mb-12 mx-auto"
+        >
+          Traveling with friends, family, or colleagues has never been easier or
+          more exciting. Our{" "}
+          <span className="font-semibold">group travel packages</span> offer{" "}
+          <strong>
+            exclusive discounts, tailor-made itineraries, premium
+            accommodations, and unforgettable shared experiences
+          </strong>
+          . Whether it’s adventure treks, cultural tours, or relaxing holidays,
+          we ensure your group journey is seamless and memorable.
         </Typography>
 
         {/* Benefits */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          <div className="p-6 bg-white rounded-xl shadow-md text-center">
-            <Users className="w-10 h-10 text-orange-600 mx-auto mb-3" />
-            <Typography variant="h6" className="font-semibold">
-              Bigger Savings
-            </Typography>
-            <Typography variant="body2" className="text-gray-600">
-              Special discounts for groups of 5+ travelers.
-            </Typography>
-          </div>
-          <div className="p-6 bg-white rounded-xl shadow-md text-center">
-            <TicketPercent className="w-10 h-10 text-green-600 mx-auto mb-3" />
-            <Typography variant="h6" className="font-semibold">
-              Exclusive Offers
-            </Typography>
-            <Typography variant="body2" className="text-gray-600">
-              Complimentary add-ons and group perks.
-            </Typography>
-          </div>
-          <div className="p-6 bg-white rounded-xl shadow-md text-center">
-            <Map className="w-10 h-10 text-blue-600 mx-auto mb-3" />
-            <Typography variant="h6" className="font-semibold">
-              Custom Routes
-            </Typography>
-            <Typography variant="body2" className="text-gray-600">
-              Tailor-made itineraries for your group’s needs.
-            </Typography>
-          </div>
-          <div className="p-6 bg-white rounded-xl shadow-md text-center">
-            <PartyPopper className="w-10 h-10 text-purple-600 mx-auto mb-3" />
-            <Typography variant="h6" className="font-semibold">
-              Fun Experiences
-            </Typography>
-            <Typography variant="body2" className="text-gray-600">
-              Team bonding, adventure, and cultural activities.
-            </Typography>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+          {benefits.map((b, i) => (
+            <div
+              key={i}
+              className="p-6 bg-white rounded-xl shadow-md text-center hover:shadow-xl transition"
+            >
+              {b.icon}
+              <Typography variant="h6" className="font-semibold mb-2">
+                {b.title}
+              </Typography>
+              <Typography variant="body2" className="text-gray-600">
+                {b.desc}
+              </Typography>
+            </div>
+          ))}
         </div>
 
-        {/* Inquiry Form */}
-        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8">
-          <Typography
-            variant="h5"
-            className="font-bold text-center mb-6 text-orange-700"
-          >
-            Request Group Travel Quote
+        {/* Why Choose Us */}
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 text-center mb-12">
+          <Typography variant="h5" className="font-bold mb-4 text-orange-700">
+            Why Choose Our Group Packages?
           </Typography>
+          <Typography variant="body1" className="text-gray-700 mb-6">
+            Our experience in group travel ensures every detail is taken care
+            of:
+          </Typography>
+          <ul className="list-disc text-left text-gray-700 space-y-2 pl-6">
+            <li>
+              Custom itineraries tailored to your group’s interests and pace.
+            </li>
+            <li>Special discounts, add-ons, and group perks.</li>
+            <li>Professional guides and support for seamless travel.</li>
+            <li>
+              Carefully selected accommodations and transport for comfort.
+            </li>
+            <li>
+              Activities ranging from adventure treks to cultural explorations.
+            </li>
+            <li>Safe and responsible travel with high-quality standards.</li>
+          </ul>
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name & Email */}
-            <div className="flex flex-col md:flex-row gap-4">
-              <TextField
-                label="Full Name"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                fullWidth
-                required
-              />
-              <TextField
-                label="Email"
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                fullWidth
-                required
-              />
-            </div>
+        {/* Highlight Destinations */}
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 text-center mb-12">
+          <Typography variant="h5" className="font-bold mb-4 text-orange-700">
+            Popular Group Destinations
+          </Typography>
+          <Typography variant="body1" className="text-gray-700 mb-6">
+            Experience the best locations with your friends or family:
+          </Typography>
+          <ul className="list-disc text-left text-gray-700 space-y-2 pl-6">
+            <li>Everest Base Camp Trek, Nepal</li>
+            <li>Annapurna Circuit, Nepal</li>
+            <li>Bhutan Cultural Tours</li>
+            <li>Tibet Adventure Treks</li>
+            <li>Lake Tilicho and Mustang Valley</li>
+            <li>Pokhara & Kathmandu Highlights</li>
+          </ul>
+        </div>
 
-            {/* Group Size & Destination */}
-            <div className="flex flex-col md:flex-row gap-4">
-              <TextField
-                label="Group Size"
-                name="groupSize"
-                type="number"
-                value={form.groupSize}
-                onChange={handleChange}
-                fullWidth
-                required
-              />
-              <TextField
-                label="Preferred Destination"
-                name="destination"
-                value={form.destination}
-                onChange={handleChange}
-                fullWidth
-                required
-              />
-            </div>
-
-            {/* Message */}
-            <TextField
-              label="Additional Message (optional)"
-              name="message"
-              value={form.message}
-              onChange={handleChange}
-              fullWidth
-              multiline
-              rows={3}
-            />
-
-            {/* Submit */}
-            <div className="text-center">
-              <Button
-                type="submit"
-                className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg text-lg"
-              >
-                Get Group Quote
-              </Button>
-            </div>
-          </form>
+        {/* Call to Action */}
+        <div className="text-center mt-12">
+          <Button
+            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-4 rounded-xl text-lg font-semibold shadow-lg transition-transform transform hover:scale-105"
+            onClick={() => router.push("/contact")} // <-- navigate to contact
+          >
+            Contact Us for Group Travel Offers
+          </Button>
         </div>
       </div>
     </Box>

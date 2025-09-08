@@ -8,7 +8,7 @@ import { tours } from "@/lib/tourpackage";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-export default function TourDashboard() {
+export default function Trekking() {
   const [category, setCategory] = useState("Tour"); // ✅ default = Tour
   const [difficulty, setDifficulty] = useState("All");
   const router = useRouter();

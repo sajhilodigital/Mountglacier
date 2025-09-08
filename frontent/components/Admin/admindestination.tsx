@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Eye } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Destination = {
   id: number;
@@ -18,6 +19,7 @@ type Destination = {
 };
 
 export default function AdminDestinations() {
+  const router = useRouter();
   const [destinations, setDestinations] = useState<Destination[]>([
     {
       id: 1,
@@ -26,8 +28,7 @@ export default function AdminDestinations() {
       duration: "14 Days",
       price: 1299,
       status: "Active",
-      image:
-        "https://images.unsplash.com/photo-1509644851180-7f3b3c341f11?w=800",
+      image: "/destination/everest.jpeg",
       description:
         "The Everest Base Camp trek is a journey to the foot of the world's highest mountain, offering stunning views of the Himalayas.",
     },
@@ -38,8 +39,7 @@ export default function AdminDestinations() {
       duration: "10 Days",
       price: 999,
       status: "Draft",
-      image:
-        "https://images.unsplash.com/photo-1509644851180-7f3b3c341f22?w=800",
+      image: "/destination/anapurna.jpeg",
       description:
         "The Annapurna Circuit is a classic trek that circles the Annapurna Massif, passing through diverse landscapes and cultures.",
     },
@@ -50,15 +50,47 @@ export default function AdminDestinations() {
       duration: "7 Days",
       price: 799,
       status: "Hidden",
-      image:
-        "https://images.unsplash.com/photo-1509644851180-7f3b3c341f33?w=800",
+      image: "/destination/lantang.jpeg",
       description:
         "Langtang Valley Trek is a short but scenic trek offering beautiful valleys, alpine forests, and Himalayan panoramas.",
+    },
+    {
+      id: 4,
+      title: "Manaslu Circuit Trek",
+      region: "Gorkha, Nepal",
+      duration: "16 Days",
+      price: 1399,
+      status: "Active",
+      image: "/destination/manaslu.jpeg",
+      description:
+        "Manaslu Circuit Trek is an adventurous and less-crowded trek with breathtaking views and remote village experience.",
+    },
+    {
+      id: 5,
+      title: "Mardi Himal Trek",
+      region: "Annapurna, Nepal",
+      duration: "6 Days",
+      price: 699,
+      status: "Active",
+      image: "/destination/mardihimal.jpg",
+      description:
+        "Mardi Himal Trek is a short and scenic trek that offers excellent views of Machapuchare and Annapurna range.",
+    },
+    {
+      id: 6,
+      title: "Upper Mustang Trek",
+      region: "Mustang, Nepal",
+      duration: "12 Days",
+      price: 1599,
+      status: "Active",
+      image: "/destination/uppermustang.jpg",
+      description:
+        "Upper Mustang Trek is a journey into the last forbidden kingdom with Tibetan culture, caves, and desert-like landscapes.",
     },
   ]);
 
   const editDestination = (id: number) => {
-    alert(`Edit destination with ID: ${id}`);
+    router.push(`/admin/edit/${id}`);
   };
 
   const deleteDestination = (id: number) => {
@@ -66,56 +98,82 @@ export default function AdminDestinations() {
     setDestinations((prev) => prev.filter((d) => d.id !== id));
   };
 
-  return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold mb-4">Admin Destinations</h1>
+  const viewDetail = (id: number) => {
+    alert(`View details for destination ID: ${id}`);
+  };
 
-      <div className="space-y-6">
+  return (
+    <div className="p-4 sm:p-6 space-y-6">
+      <h1 className="text-2xl font-bold mb-4 text-center sm:text-left">
+        Admin Destinations
+      </h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
         {destinations.map((dest) => (
-          <Card key={dest.id} className="overflow-hidden shadow-md">
-            <Image 
-            height={0}
-            width={0}
-            sizes="100%"
-              src={dest.image}
-              alt={dest.title}
-              className="w-full h-48 object-cover"
-            />
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">
-                {dest.title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p>
-                <strong>Region:</strong> {dest.region}
-              </p>
-              <p>
-                <strong>Duration:</strong> {dest.duration}
-              </p>
-              <p>
-                <strong>Price:</strong> ${dest.price}
-              </p>
-              <p>
-                <strong>Status:</strong> {dest.status}
-              </p>
-              <p className="text-gray-700">{dest.description}</p>
-            </CardContent>
-            <div className="flex justify-end gap-2 p-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => editDestination(dest.id)}
+          <Card
+            key={dest.id}
+            className="relative overflow-hidden shadow-md rounded-xl group cursor-pointer"
+            onClick={() => viewDetail(dest.id)} // whole card clickable on mobile
+          >
+            {/* Image */}
+            <div className="relative w-full h-64 sm:h-60 md:h-64">
+              <Image
+                src={dest.image}
+                alt={dest.title}
+                fill
+                className="object-cover transition-all duration-300 group-hover:scale-105"
+              />
+            </div>
+
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black/50 flex flex-col justify-between p-3 transition-all duration-300 group-hover:bg-black/0">
+              {/* Top Left Details */}
+              <div className="text-white text-sm space-y-1">
+                <h2 className="text-lg font-semibold">{dest.title}</h2>
+                <p>
+                  <strong>Region:</strong> {dest.region}
+                </p>
+                <p>
+                  <strong>Duration:</strong> {dest.duration}
+                </p>
+                <p>
+                  <strong>Price:</strong> ${dest.price}
+                </p>
+                <p>
+                  <strong>Status:</strong> {dest.status}
+                </p>
+              </div>
+
+              {/* Bottom Buttons */}
+              <div
+                className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0"
+                onClick={(e) => e.stopPropagation()} // prevent parent click
               >
-                <Pencil className="w-4 h-4 mr-1" /> Edit
-              </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => deleteDestination(dest.id)}
-              >
-                <Trash2 className="w-4 h-4 mr-1" /> Delete
-              </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="bg-white/90 text-black hover:bg-white w-full sm:w-auto transition-all duration-200"
+                  onClick={() => viewDetail(dest.id)}
+                >
+                  <Eye className="w-4 h-4 mr-1" /> View detail
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-white/90 text-black hover:bg-white w-full sm:w-auto transition-all duration-200"
+                  onClick={() => editDestination(dest.id)}
+                >
+                  <Pencil className="w-4 h-4 mr-1" /> Edit
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="w-full sm:w-auto transition-all duration-200"
+                  onClick={() => deleteDestination(dest.id)}
+                >
+                  <Trash2 className="w-4 h-4 mr-1" /> Delete
+                </Button>
+              </div>
             </div>
           </Card>
         ))}

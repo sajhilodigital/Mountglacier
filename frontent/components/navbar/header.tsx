@@ -18,7 +18,6 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { usePathname } from "next/navigation";
-
 import {
   Home,
   MapPin,
@@ -33,14 +32,22 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [packageAnchor, setPackageAnchor] = useState<null | HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const pathname = usePathname();
   const isHomePage = pathname === "/";
 
-  const iconColor = "#003366"; // same color for all icons
+  const iconColor = "#003366";
 
+  // Loading screen effect
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 3500); // 3.5s loading
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Scroll effect only on home page
   useEffect(() => {
     if (!isHomePage) return;
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -48,11 +55,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHomePage]);
 
-  const menuItems: {
-    label: string;
-    href: string;
-    subItems?: { label: string; href: string }[];
-  }[] = [
+  const menuItems = [
     { label: "Home", href: "/" },
     { label: "Destinations", href: "/destination" },
     { label: "Services", href: "/services" },
@@ -73,11 +76,56 @@ export default function Header() {
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(event.currentTarget);
   const handleUserMenuClose = () => setAnchorEl(null);
-
   const handlePackageToggle = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     setPackageAnchor(packageAnchor ? null : event.currentTarget);
   };
+
+  // Loading screen
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex flex-col justify-center items-center bg-gradient-to-br from-[#003366] to-[#66b2ff] z-50">
+        <div className="flex flex-col items-center">
+          <Image
+            src="/logo1.png"
+            alt="logo"
+            width={140}
+            height={70}
+            className="animate-logoSlide"
+          />
+          <h1 className="text-white text-2xl md:text-3xl mt-6 font-bold text-center animate-textSlide delay-300">
+            Welcome to Mount Glacier Alpine Adventure Trek and Tours
+          </h1>
+          <p className="text-white mt-2 opacity-80 animate-textSlide delay-500">
+            Explore Nepal, Bhutan & Tibet with Us
+          </p>
+        </div>
+
+        <style>{`
+          @keyframes logoSlide {
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes textSlide {
+            0% { opacity: 0; transform: translateY(80px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          .animate-logoSlide {
+            animation: logoSlide 1s ease-out forwards;
+          }
+          .animate-textSlide {
+            animation: textSlide 1s ease-out forwards;
+          }
+          .animate-textSlide.delay-300 {
+            animation-delay: 0.3s;
+          }
+          .animate-textSlide.delay-500 {
+            animation-delay: 0.5s;
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -95,7 +143,7 @@ export default function Header() {
         </div>
       )}
 
-      {/* Navbar */}
+      {/* AppBar / Navbar */}
       <AppBar
         position="fixed"
         sx={{
@@ -107,13 +155,12 @@ export default function Header() {
             : "#e6f2ff",
           boxShadow:
             scrolled || !isHomePage ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
-          transition: "all 0.2s ease",
+          transition: "all 0.3s ease",
           zIndex: 50,
         }}
         className="px-4 md:px-16"
       >
         <Toolbar className="w-full flex justify-between items-center">
-          {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
               src="/logo1.png"
@@ -124,11 +171,10 @@ export default function Header() {
             />
           </Link>
 
-          {/* Desktop Menu */}
           {!isMobile && (
             <Box
               className="hidden md:flex space-x-4 font-medium items-center"
-              style={{ color: iconColor }}
+              style={{ color: isHomePage && !scrolled ? "white" : iconColor }}
             >
               {menuItems.map((item) =>
                 !item.subItems ? (
@@ -145,14 +191,11 @@ export default function Header() {
                       <span>{item.label}</span>
                       <ChevronDown
                         size={16}
-                        color={iconColor}
+                        color={isHomePage && !scrolled ? "white" : iconColor}
                         className="ml-1 transition-transform duration-300 group-hover:rotate-180"
                       />
                     </Box>
-                    <Box
-                      className="absolute left-0 mt-2 w-40 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible
-                      transition-all duration-300 ease-in-out transform scale-y-0 group-hover:scale-y-100 origin-top"
-                    >
+                    <Box className="absolute left-0 mt-2 w-40 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out transform scale-y-0 group-hover:scale-y-100 origin-top">
                       {item.subItems.map((sub) => (
                         <Link
                           key={sub.label}
@@ -169,8 +212,8 @@ export default function Header() {
             </Box>
           )}
 
-          {/* Right Side */}
-          <Box className="flex items-center space-x-2 md:space-x-4">
+          <Box className="flex items-center space-x-6 md:space-x-8">
+            {/* Book Now */}
             {!isMobile && (
               <Button
                 component={Link}
@@ -188,13 +231,22 @@ export default function Header() {
                 Book Now
               </Button>
             )}
+
+            {/* User Icon */}
             <IconButton
               onClick={handleUserMenuOpen}
-              className="bg-gray-200 rounded-full  border-2 border-gray-300"
-              sx={{ width: 40, height: 40, p: 1 }}
+              className="rounded-full border-2 border-gray-300  !ml-8 hover:border-gray-400"
+              sx={{
+                width: 44,
+                height: 44,
+                p: 1,
+                backgroundColor: "#ffcc00",
+                "&:hover": { backgroundColor: "#ffb300" },
+              }}
             >
               <User size={24} color={iconColor} />
             </IconButton>
+
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
@@ -223,7 +275,6 @@ export default function Header() {
       {isMobile && (
         <Box className="fixed bottom-0 left-0 w-full h-16 bg-[#e6f2ff] shadow-t z-40">
           <Box className="relative h-full flex justify-between items-center px-4 max-w-md mx-auto w-full">
-            {/* Home */}
             <Link
               href="/"
               className="flex flex-col items-center text-center w-1/5"
@@ -233,7 +284,6 @@ export default function Header() {
               <span className="text-xs mt-1">Home</span>
             </Link>
 
-            {/* Destination */}
             <Link
               href="/destination"
               className="flex flex-col items-center text-center w-1/5"
@@ -243,16 +293,17 @@ export default function Header() {
               <span className="text-xs mt-1">Destination</span>
             </Link>
 
-            {/* Book Button (center) */}
-            <Link
-              href="/booknow"
-              className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white rounded-full p-2 shadow-lg animate-pulse hover:scale-110 transition-transform flex flex-col items-center z-50 w-16 h-16 justify-center"
-            >
-              <BookOpen size={24} color="white" />
-              <span className="text-[10px] font-bold">Book</span>
-            </Link>
+            {/* Center floating Book button */}
+            <Box className="absolute -top-6 left-1/2 transform -translate-x-1/2 pointer-events-none">
+              <Link
+                href="/booknow"
+                className="pointer-events-auto bg-blue-600 text-white rounded-full p-2 shadow-lg animate-pulse hover:scale-110 transition-transform flex flex-col items-center w-16 h-16 justify-center"
+              >
+                <BookOpen size={24} color="white" />
+                <span className="text-[10px] font-bold">Book</span>
+              </Link>
+            </Box>
 
-            {/* Services */}
             <Link
               href="/services"
               className="flex flex-col items-center text-center w-1/5"
@@ -262,7 +313,6 @@ export default function Header() {
               <span className="text-xs mt-1">Services</span>
             </Link>
 
-            {/* Packages */}
             <Box className="flex flex-col items-center text-center w-1/5 relative">
               <Button
                 onClick={handlePackageToggle}
@@ -311,17 +361,13 @@ export default function Header() {
         </Box>
       )}
 
-      <style>
-        {`
-          @keyframes scrollText {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-          }
-          .animate-scrollText {
-            animation: scrollText 45s linear infinite;
-          }
-        `}
-      </style>
+      <style>{`
+        @keyframes scrollText {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
+        }
+        .animate-scrollText { animation: scrollText 45s linear infinite; }
+      `}</style>
     </>
   );
 }

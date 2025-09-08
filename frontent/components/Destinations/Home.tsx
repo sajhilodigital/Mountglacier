@@ -11,12 +11,12 @@ const destinations = [
   {
     name: "Tour in Nepal",
     img: "/destination/chitwan.jpg",
-    link: "/destination/nepal-tour",
+    link: "/destination/travel",
   },
   {
     name: "Peak Climbing",
     img: "/destination/everest.jpeg",
-    link: "/destination/peak-climbing",
+    link: "/destination/adventure",
   },
   {
     name: "Trekking in Nepal",
