@@ -176,8 +176,9 @@ router.put(
   async (req, res, next) => {
     try {
       const { files, body } = req;
+      const tourId = req.params.id;
 
-      // ✅ Parse itinerary safely
+      // --- Parse itinerary safely
       let itinerary = [];
       if (body.itinerary) {
         try {
@@ -193,33 +194,24 @@ router.put(
         }
       }
 
-      // ✅ Handle Tour Images
+      // --- Handle tour images
       let images = [];
-
-      if (files && files.length) {
+      if (files?.length) {
         const tourImageFiles = files.filter(
           (f) => f.fieldname === "tourImages"
         );
         for (const file of tourImageFiles) {
           const result = await uploadBufferToCloudinary(file.buffer, "tours");
-          images.push({
-            url: result.secure_url,
-            public_id: result.public_id,
-          });
+          images.push({ url: result.secure_url, public_id: result.public_id });
         }
       } else if (body.images) {
-        // ✅ If no new files, check if body.images exists
         try {
           const parsedImages =
             typeof body.images === "string"
               ? JSON.parse(body.images)
               : body.images;
-
-          // Convert from string array to object array if needed
           images = parsedImages.map((img) =>
-            typeof img === "string"
-              ? { url: img, public_id: "" } // public_id empty for old images
-              : img
+            typeof img === "string" ? { url: img, public_id: "" } : img
           );
         } catch {
           return res.status(400).json({
@@ -229,10 +221,9 @@ router.put(
         }
       }
 
-      // ✅ Handle Day Images
-      const dayImageFiles = files
-        ? files.filter((f) => f.fieldname.startsWith("dayImages-"))
-        : [];
+      // --- Handle day images
+      const dayImageFiles =
+        files?.filter((f) => f.fieldname.startsWith("dayImages-")) || [];
       for (const day of itinerary) {
         day.images = [];
         const dayFiles = dayImageFiles.filter(
@@ -250,15 +241,41 @@ router.put(
         }
       }
 
-      // ✅ Build update payload
-      const updateData = {
-        ...body,
-        images,
-        itinerary,
-      };
+      // --- Build update payload
+      const updateData = { ...body, images, itinerary };
 
+      // --- Prevent duplicate code
+      if (updateData.code) {
+        const codeExists = await TourTable.findOne({
+          code: updateData.code.trim(),
+          _id: { $ne: tourId },
+        });
+        if (codeExists) {
+          return res.status(400).json({
+            success: false,
+            message:
+              "Duplicate tour code detected. Please choose another code.",
+          });
+        }
+      }
+
+      // --- Prevent duplicate slug
+      if (updateData.slug) {
+        const slugExists = await TourTable.findOne({
+          slug: updateData.slug.trim(),
+          _id: { $ne: tourId },
+        });
+        if (slugExists) {
+          return res.status(400).json({
+            success: false,
+            message: "Duplicate slug detected. Please choose another slug.",
+          });
+        }
+      }
+
+      // --- Update tour
       const updatedTour = await TourTable.findByIdAndUpdate(
-        req.params.id,
+        tourId,
         updateData,
         {
           new: true,
@@ -272,6 +289,7 @@ router.put(
           .json({ success: false, message: "Tour not found" });
       }
 
+      // --- Success response
       return res.status(200).json({
         success: true,
         message: "Tour updated successfully",
@@ -279,11 +297,20 @@ router.put(
       });
     } catch (err) {
       console.error("Error updating tour:", err);
-      next(err);
+      // Handle Mongo duplicate key error just in case
+      if (err.code === 11000) {
+        const key = Object.keys(err.keyValue)[0];
+        return res.status(400).json({
+          success: false,
+          message: `Duplicate ${key} detected. Please choose another one.`,
+        });
+      }
+      return res
+        .status(500)
+        .json({ success: false, message: "Server error. Update failed." });
     }
   }
 );
-
 
 
 
