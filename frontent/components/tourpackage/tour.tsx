@@ -40,16 +40,18 @@ export default function TourPackages() {
         {filteredTours.slice(0, 6).map((tour, idx) => (
           <Card
             key={idx}
-            className="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group p-"
+            className="p-0 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group p-"
           >
             {/* Image with left-side overlay */}
             <div className="relative w-full aspect-[4/3]">
               <Image
                 src={tour.image}
                 alt={tour.title}
+                width={0}
+                height={0}
                 fill
-                sizes="(max-width: 768px) 100vw, 25vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                sizes="100%"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
 
               {/* Overlay Content (top-left corner) */}

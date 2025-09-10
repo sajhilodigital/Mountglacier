@@ -112,7 +112,7 @@ export default function AdminDestinations() {
         {destinations.map((dest) => (
           <Card
             key={dest.id}
-            className="relative overflow-hidden shadow-md rounded-xl group cursor-pointer"
+            className="relative overflow-hidden shadow-md rounded-xl group cursor-pointer p-0"
             onClick={() => viewDetail(dest.id)} // whole card clickable on mobile
           >
             {/* Image */}

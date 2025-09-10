@@ -8,7 +8,7 @@ import CountUp from "react-countup";
 
 export default function Dashboard() {
   return (
-    <Box className="relative h-[100vh] flex items-center text-white overflow-hidden">
+    <Box className="relative h-[100vh] flex items-center text-white overflow-hidden ">
       {/* Blurred Background */}
       <Box
         className="absolute inset-0"
@@ -63,7 +63,7 @@ export default function Dashboard() {
 
         {/* Stats with CountUp */}
         <Box className="flex flex-col sm:flex-row gap-8 mt-12 text-lg font-semibold">
-          <Card className="bg-transparent border-none shadow-none text-center text-white drop-shadow-md">
+          <Card className="p-0 bg-transparent border-none shadow-none text-center text-white drop-shadow-md">
             <CardContent>
               <Typography variant="h5" className="drop-shadow-md">
                 <CountUp end={50} duration={2} />+
@@ -71,7 +71,7 @@ export default function Dashboard() {
               <Typography variant="body2">Countries</Typography>
             </CardContent>
           </Card>
-          <Card className="bg-transparent border-none shadow-none text-center text-white drop-shadow-md">
+          <Card className="p-0 bg-transparent border-none shadow-none text-center text-white drop-shadow-md">
             <CardContent>
               <Typography variant="h5" className="drop-shadow-md">
                 <CountUp end={10000} duration={3} separator="," />+
@@ -79,7 +79,7 @@ export default function Dashboard() {
               <Typography variant="body2">Happy Travelers</Typography>
             </CardContent>
           </Card>
-          <Card className="bg-transparent border-none shadow-none text-center text-white drop-shadow-md">
+          <Card className=" p-0 bg-transparent border-none shadow-none text-center text-white drop-shadow-md">
             <CardContent>
               <Typography variant="h5" className="drop-shadow-md">
                 <CountUp end={26} duration={2.5} />+

@@ -106,7 +106,7 @@ export default function DashboardAdmin() {
             transition={{ delay: i * 0.1 }}
           >
             <Card
-              className={`bg-gradient-to-br ${stat.bg} rounded-2xl shadow-md`}
+              className={`bg-gradient-to-br p-0 ${stat.bg} rounded-2xl shadow-md`}
             >
               <CardHeader className="flex items-center justify-between pb-2">
                 <CardTitle className="text-sm text-gray-600 font-medium">
@@ -138,7 +138,7 @@ export default function DashboardAdmin() {
       {/* Recent Orders & Users */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Orders */}
-        <Card className="rounded-2xl shadow-sm">
+        <Card className="rounded-2xl shadow-sm p-0">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">
               Recent Orders

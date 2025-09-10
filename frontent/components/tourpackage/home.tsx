@@ -40,7 +40,7 @@ export default function TourPackages() {
         {filteredTours.map((tour, idx) => (
           <Card
             key={idx}
-            className="shadow-lg rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-2xl border border-gray-100/60"
+            className="p-0 shadow-lg rounded-2xl overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-2xl border border-gray-100/60"
           >
             {/* Media with Overlay */}
             <div className="relative w-full aspect-[16/10]">

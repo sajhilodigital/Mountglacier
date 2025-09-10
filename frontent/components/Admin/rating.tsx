@@ -60,7 +60,7 @@ export default function RatingsAdminCards() {
   return (
     <div className="grid gap-4 p-6 md:grid-cols-2">
       {ratings.map((rating) => (
-        <Card key={rating.id} className="shadow-lg">
+        <Card key={rating.id} className="shadow-lg p-0">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <span className="font-semibold">{rating.user}</span>

@@ -94,7 +94,7 @@ export default function Touradventure() {
             filteredTours.map((tour) => (
               <Card
                 key={tour.title}
-                className="overflow-hidden shadow-md rounded-2xl hover:shadow-xl hover:scale-[1.02] transition duration-300"
+                className="p-0 overflow-hidden shadow-md rounded-2xl hover:shadow-xl hover:scale-[1.02] transition duration-300"
               >
                 {/* Image */}
                 <div className="relative h-52 w-full">

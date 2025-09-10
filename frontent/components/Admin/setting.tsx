@@ -13,7 +13,7 @@ export default function TravelSettingsPage() {
   return (
     <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Notification Settings */}
-      <Card className="rounded-2xl shadow-md">
+      <Card className="rounded-2xl shadow-md p-0">
         <CardHeader>
           <CardTitle>🔔 Travel Notifications</CardTitle>
         </CardHeader>
@@ -61,7 +61,7 @@ export default function TravelSettingsPage() {
       </Card>
 
       {/* Security & Privacy */}
-      <Card className="rounded-2xl shadow-md">
+      <Card className="rounded-2xl shadow-md p-0">
         <CardHeader>
           <CardTitle>🛡 Security & Privacy</CardTitle>
         </CardHeader>
@@ -112,7 +112,7 @@ export default function TravelSettingsPage() {
       </Card>
 
       {/* Travel Preferences */}
-      <Card className="lg:col-span-2 rounded-2xl shadow-md">
+      <Card className="lg:col-span-2 rounded-2xl shadow-md p-0">
         <CardHeader>
           <CardTitle>🌍 Travel Preferences</CardTitle>
         </CardHeader>

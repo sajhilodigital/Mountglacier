@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { AxiosError } from "axios";
 
 import {
   Card,
@@ -18,11 +19,35 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
-
 import { Toaster, toast } from "sonner";
-import { LoginRequest, LoginResponse } from "@/lib/interfaces";
 import axiosInstance from "@/lib/axiosInstanstance";
 
+// ================= TYPES =================
+
+// Request body
+interface LoginRequest {
+  email: string;
+  password: string;
+  remember: boolean;
+}
+
+// Server response
+interface LoginResponse {
+  success: boolean;
+  message?: string;
+  token?: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+// Error shape
+interface ApiError {
+  message: string;
+  code?: number;
+}
 
 // ================= SCHEMA =================
 const LoginSchema = yup.object({
@@ -35,40 +60,41 @@ const LoginSchema = yup.object({
     .string()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters"),
-  remember: yup.boolean().required().default(false),
+  remember: yup.boolean().default(false).defined(),
 });
 
-type LoginValues = yup.InferType<typeof LoginSchema>;
+type LoginValues = yup.InferType<typeof LoginSchema>; // same as LoginRequest
 
-// ================= PAGE =================
+// ================= COMPONENT =================
 export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const { mutate, isPending } = useMutation<LoginResponse, Error, LoginRequest>(
-    {
-      mutationKey: ["login-user"],
-      mutationFn: async (values: LoginValues): Promise<LoginResponse> => {
-        const res = await axiosInstance.post<LoginResponse>(
-          "/user/login",
-          values
-        );
-        return res.data;
-      },
-      onSuccess: (data) => {
-        if (data.success) {
-          toast.success("Logged in successfully");
-          router.push("/booknow");
-        } else {
-          toast.error(data.message || "Login failed");
-        }
-      },
-      onError: (err) => {
-        // Error is typed as `Error`
-        toast.error(err.message || "Invalid credentials");
-      },
-    }
-  );
+  const { mutate, isPending } = useMutation<
+    LoginResponse, // TData
+    AxiosError<ApiError>, // TError
+    LoginRequest // TVariables
+  >({
+    mutationKey: ["login-user"],
+    mutationFn: async (values: LoginRequest): Promise<LoginResponse> => {
+      const res = await axiosInstance.post<LoginResponse>(
+        "/user/login",
+        values
+      );
+      return res.data;
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success("Logged in successfully");
+        router.push("/booknow");
+      } else {
+        toast.error(data.message || "Login failed");
+      }
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message ?? "Invalid credentials");
+    },
+  });
 
   const initialValues: LoginValues = {
     email: "",
@@ -80,7 +106,7 @@ export default function LoginPage() {
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-muted to-background p-4">
       <Toaster richColors position="top-center" />
 
-      <Card className="w-full max-w-md border-0 shadow-xl">
+      <Card className="w-full max-w-md border-0 shadow-xl p-0">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl">Welcome back</CardTitle>
           <CardDescription>Sign in to continue your journey.</CardDescription>

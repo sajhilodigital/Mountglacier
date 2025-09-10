@@ -202,7 +202,7 @@ export default function ContactSection() {
         <Box className="flex flex-wrap justify-center max-w-7xl mx-auto gap-6 mt-7">
           {services.map((service, i) => (
             <Link href={service.link} key={i} className="no-underline">
-              <Card className="w-72 p-6 text-center shadow-lg rounded-2xl transition-transform duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer border border-transparent hover:border-gradient-to-r hover:from-sky-400 hover:to-orange-400 bg-gradient-to-br from-white via-gray-50 to-white">
+              <Card className="w-72 text-center shadow-lg rounded-2xl transition-transform p-0 duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer border border-transparent hover:border-gradient-to-r hover:from-sky-400 hover:to-orange-400 bg-gradient-to-br from-white via-gray-50 to-white">
                 <Box className="flex justify-center mb-4">
                   <div className="bg-gradient-to-r from-sky-500 to-orange-400 p-4 rounded-full inline-flex items-center justify-center">
                     {service.icon}

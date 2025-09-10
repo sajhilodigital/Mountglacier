@@ -95,7 +95,7 @@ export default function TrekForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-8 p-6 max-w-5xl mx-auto">
       {/* Basic Info */}
-      <Card className="shadow-lg border">
+      <Card className="shadow-lg border p-0">
         <CardHeader>
           <CardTitle className="text-xl font-semibold">
             Add Trek Package
@@ -171,7 +171,7 @@ export default function TrekForm() {
       </Card>
 
       {/* Price Tiers */}
-      <Card className="shadow-md border">
+      <Card className="shadow-md border p-0">
         <CardHeader>
           <CardTitle className="font-semibold">Price Tiers</CardTitle>
         </CardHeader>
@@ -216,7 +216,7 @@ export default function TrekForm() {
       </Card>
 
       {/* Itinerary */}
-      <Card className="shadow-md border">
+      <Card className="shadow-md border p-0">
         <CardHeader>
           <CardTitle className="font-semibold">Itinerary</CardTitle>
         </CardHeader>
@@ -282,7 +282,7 @@ export default function TrekForm() {
       </Card>
 
       {/* Additional Info */}
-      <Card className="shadow-md border">
+      <Card className="shadow-md border p-0">
         <CardHeader>
           <CardTitle className="font-semibold">
             Additional Information

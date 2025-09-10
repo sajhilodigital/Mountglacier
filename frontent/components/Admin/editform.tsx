@@ -34,7 +34,7 @@ export default function EditForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 p-6 max-w-4xl mx-auto">
-      <Card className="shadow-lg border">
+      <Card className="shadow-lg border p-0">
         <CardHeader>
           <CardTitle className="text-xl font-semibold">
             Edit Trek Package (Demo)
@@ -57,7 +57,7 @@ export default function EditForm() {
       </Card>
 
       {/* Price Tiers */}
-      <Card>
+      <Card className="p-0">
         <CardHeader>
           <CardTitle className="font-semibold">Price Tiers</CardTitle>
         </CardHeader>
@@ -102,7 +102,7 @@ export default function EditForm() {
       </Card>
 
       {/* Itinerary */}
-      <Card>
+      <Card className="p-0">
         <CardHeader>
           <CardTitle className="font-semibold">Itinerary</CardTitle>
         </CardHeader>
