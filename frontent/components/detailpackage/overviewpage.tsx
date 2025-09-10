@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function OverviewPage() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-gradient-to-br from-pink-50 via-white to-indigo-50 min-h-screen">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-gradient-to-br from-pink-50 md:mt-32 via-white to-indigo-50 min-h-screen">
       {/* Sidebar */}
       <Card className="md:col-span-1 shadow-xl rounded-2xl border-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-pink-500/10">
         <CardContent className="space-y-4 text-sm p-4">

@@ -106,7 +106,7 @@ export default function LoginPage() {
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-muted to-background p-4">
       <Toaster richColors position="top-center" />
 
-      <Card className="w-full max-w-md border-0 shadow-xl p-0">
+      <Card className="w-full max-w-md border-0 shadow-xl">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl">Welcome back</CardTitle>
           <CardDescription>Sign in to continue your journey.</CardDescription>
