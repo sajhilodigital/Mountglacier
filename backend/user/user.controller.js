@@ -149,6 +149,16 @@ router.post("/logout", (req, res) => {
 });
 
 // -------------------- AUTHENTICATION --------------------
+router.get("/auth/me", (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
 
+  try {
+    const user = jwt.verify(token, JWT_SECRET);
+    res.json({ user });
+  } catch (err) {
+    res.status(401).json({ message: "Invalid token" });
+  }
+});
 
 export { router as userController };

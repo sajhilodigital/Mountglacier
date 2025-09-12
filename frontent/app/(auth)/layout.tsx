@@ -68,7 +68,7 @@ export default function RootLayout({
 
           <ReactQueryClientProvider>
 
-        <Header />
+             <Header />
             {children}
             </ReactQueryClientProvider>
         <Footer />

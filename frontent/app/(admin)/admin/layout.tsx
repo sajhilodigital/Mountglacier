@@ -35,10 +35,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Toaster />
-        <AdminGuard>
+        {/* <AdminGuard> */}
 
         <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
-        </AdminGuard>
+        {/* </AdminGuard> */}
       </body>
     </html>
   );

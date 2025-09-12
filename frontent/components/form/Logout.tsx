@@ -36,9 +36,9 @@ export const LogoutButton = () => {
   return (
     <button
       onClick={handleLogout}
-      className="h-8 w-36 flex justify-center gap-3 items-center text-white rounded-xl bg-gradient-to-r from-indigo-700 to-purple-600 hover:bg-gray-500 ease-soft-spring duration-400 transition-all"
+      className="h-8 w-36 flex justify-center gap-3 items-center bg-transparent "
     >
       <LogOut size={16} /> Log Out
     </button>
-  );
+  ); 
 };
