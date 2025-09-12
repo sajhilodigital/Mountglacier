@@ -5,6 +5,7 @@ import Header from "@/components/navbar/header";
 import Footer from "@/components/navbar/footer";
 import { Toaster } from "sonner";
 import ReactQueryClientProvider from "@/provider/QueryClientProvider";
+import AuthGuard from "@/guard/AuthGuard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -63,9 +64,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* Header stays fixed at the top */}
-        <Header />
+
         <Toaster />
-          <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
+
+          <ReactQueryClientProvider>
+
+        <Header />
+            {children}
+            </ReactQueryClientProvider>
         <Footer />
       </body>
     </html>

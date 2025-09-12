@@ -52,7 +52,7 @@ export default function RegisterForm() {
     mutationKey: ["register-user"],
     mutationFn: async (values: RegisterValues) => {
       const { data } = await axiosInstance.post<RegisterResponse>(
-        "/user/register",
+        "/register",
         values,
         { withCredentials: true }
       );
@@ -201,11 +201,11 @@ export default function RegisterForm() {
           )}
         </Formik>
 
-        <p className="text-sm text-center mt-6 text-gray-600">
+        <p className="text-sm text-center mt-6 text-gray-600 px-2">
           Already have an account?{" "}
           <a
             href="/login"
-            className="text-blue-600 hover:underline font-medium"
+            className="text-blue-600 hover:underline font-medium "
           >
             Login
           </a>

@@ -17,7 +17,7 @@ import {
   Fade,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Home,
   MapPin,
@@ -27,6 +27,8 @@ import {
   BookOpen,
   ChevronDown,
 } from "lucide-react";
+import { LogoutButton } from "../form/Logout";
+import axiosInstance from "@/lib/axiosInstanstance";
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -38,6 +40,30 @@ export default function Header() {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const pathname = usePathname();
   const isHomePage = pathname === "/";
+  const router = useRouter()
+
+ const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+ useEffect(() => {
+   const checkAuth = async () => {
+     try {
+       const res = await axiosInstance.get("/auth/me"); // cookies sent automatically
+       if (res.status === 200) {
+         setIsAuthenticated(true);
+       } else {
+         setIsAuthenticated(false);
+       }
+     } catch (err) {
+       console.log("Auth check error:", err);
+       setIsAuthenticated(false);
+     } finally {
+       setLoading(false);
+     }
+   };
+
+   checkAuth();
+ }, [router]);
+
 
   const iconColor = "#003366";
 
@@ -234,38 +260,47 @@ export default function Header() {
 
             {/* User Icon */}
             <IconButton
-              onClick={handleUserMenuOpen}
-              className="rounded-full border-2 border-gray-300  !ml-8 hover:border-gray-400"
-              sx={{
-                width: 44,
-                height: 44,
-                p: 1,
-                backgroundColor: "#ffcc00",
-                "&:hover": { backgroundColor: "#ffb300" },
-              }}
-            >
-              <User size={24} color={iconColor} />
-            </IconButton>
+                onClick={handleUserMenuOpen}
+                className="rounded-full border-2 border-gray-300  !ml-8 hover:border-gray-400"
+                sx={{
+                  width: 44,
+                  height: 44,
+                  p: 1,
+                  backgroundColor: "#ffcc00",
+                  "&:hover": { backgroundColor: "#ffb300" },
+                }}
+              >
+                <User size={24} color={iconColor} />
+              </IconButton>
+
 
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleUserMenuClose}
-            >
-              <MenuItem
+              >
+              {isAuthenticated ? (
+                <LogoutButton />
+              ) : (
+                <>
+                 <MenuItem
                 component={Link}
                 href="/login"
                 onClick={handleUserMenuClose}
-              >
+                >
                 Login
               </MenuItem>
               <MenuItem
                 component={Link}
                 href="/register"
                 onClick={handleUserMenuClose}
-              >
+                >
                 Register
               </MenuItem>
+                
+                </>
+              )}
+             
             </Menu>
           </Box>
         </Toolbar>

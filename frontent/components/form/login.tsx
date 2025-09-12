@@ -1,13 +1,14 @@
 "use client";
 
-import * as React from "react";
-import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as yup from "yup";
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { AxiosError } from "axios";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { useRouter } from "next/navigation";
+import * as React from "react";
+import * as yup from "yup";
 
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,12 +16,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
-import { Toaster, toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
 import axiosInstance from "@/lib/axiosInstanstance";
+import { Toaster, toast } from "sonner";
 
 // ================= TYPES =================
 
@@ -68,6 +68,7 @@ type LoginValues = yup.InferType<typeof LoginSchema>; // same as LoginRequest
 // ================= COMPONENT =================
 export default function LoginPage() {
   const router = useRouter();
+  // const dispatch = useDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
 
   const { mutate, isPending } = useMutation<
@@ -78,15 +79,17 @@ export default function LoginPage() {
     mutationKey: ["login-user"],
     mutationFn: async (values: LoginRequest): Promise<LoginResponse> => {
       const res = await axiosInstance.post<LoginResponse>(
-        "/user/login",
+        "/login",
         values
       );
+      console.log(res?.data)
+  //  dispatch(setUser(res.data))
       return res.data;
     },
     onSuccess: (data) => {
       if (data.success) {
         toast.success("Logged in successfully");
-        router.push("/booknow");
+        router.push("/");
       } else {
         toast.error(data.message || "Login failed");
       }
