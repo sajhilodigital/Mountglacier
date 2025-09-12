@@ -3,9 +3,23 @@
 import axiosInstance from "@/lib/axiosInstanstance";
 import { useMutation } from "@tanstack/react-query";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail, Lock, User, Phone, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
+import * as React from "react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Toaster, toast } from "sonner";
 
 // ✅ Validation Schema
 const RegisterSchema = Yup.object({
@@ -19,7 +33,6 @@ const RegisterSchema = Yup.object({
   role: Yup.string()
     .oneOf(["traveler", "admin", "guide"], "Invalid role")
     .required("Role is required"),
-  profilePic: Yup.string().url("Enter a valid URL").optional().nullable(),
   password: Yup.string()
     .min(8, "At least 8 characters")
     .matches(/[A-Z]/, "Must contain uppercase")
@@ -31,19 +44,19 @@ const RegisterSchema = Yup.object({
     .required("Confirm your password"),
 });
 
-//  Types from Yup schema
 export type RegisterValues = Yup.InferType<typeof RegisterSchema>;
 
-//  API Response Type
 interface RegisterResponse {
   message: string;
   userId?: string;
 }
 
-export default function RegisterForm() {
+export default function RegisterPage() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirm, setShowConfirm] = React.useState(false);
 
-  //  Secure API call with axiosInstance
+  // ✅ React Query Mutation
   const { mutate, isPending } = useMutation<
     RegisterResponse,
     Error,
@@ -59,158 +72,202 @@ export default function RegisterForm() {
       return data;
     },
     onSuccess: () => {
+      toast.success("Account created successfully!");
       router.replace("/login");
     },
     onError: (err: Error) => {
-      alert(err.message || "Something went wrong");
+      toast.error(err.message || "Something went wrong");
     },
   });
 
-  const handleSubmit = (values: RegisterValues) => {
-    mutate(values);
+  const initialValues: RegisterValues = {
+    name: "",
+    email: "",
+    phone: "",
+    role: "traveler",
+    password: "",
+    confirmPassword: "",
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-blue-200 p-6">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-blue-700 mb-4">
-          Create an Account
-        </h2>
-        <p className="text-gray-500 mb-6 text-sm">
-          Join us and start your adventures
-        </p>
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-muted to-background p-4">
+      <Toaster richColors position="top-center" />
 
-        <Formik<RegisterValues>
-          initialValues={{
-            name: "",
-            email: "",
-            phone: "",
-            role: "traveler",
-            profilePic: "",
-            password: "",
-            confirmPassword: "",
-          }}
-          validationSchema={RegisterSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ handleSubmit }) => (
-            <Form onSubmit={handleSubmit} className="space-y-4">
-              {/* Full Name */}
-              <div>
-                <Field
-                  name="name"
-                  type="text"
-                  placeholder="Full Name"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-                <ErrorMessage
-                  name="name"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
-                />
-              </div>
+      <Card className="w-full max-w-md border-0 shadow-xl">
+        <CardHeader className="space-y-2">
+          <CardTitle className="text-2xl">Create an Account</CardTitle>
+          <CardDescription>Join us and start your adventures.</CardDescription>
+        </CardHeader>
 
-              {/* Email */}
-              <div>
-                <Field
-                  name="email"
-                  type="email"
-                  placeholder="Email Address"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-                <ErrorMessage
-                  name="email"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
-                />
-              </div>
-
-              {/* Phone */}
-              <div>
-                <Field
-                  name="phone"
-                  type="text"
-                  placeholder="Phone Number"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-                <ErrorMessage
-                  name="phone"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
-                />
-              </div>
-
-              {/* Role */}
-              <div>
-                <Field
-                  as="select"
-                  name="role"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-                >
-                  <option value="traveler">Traveler</option>
-                  <option value="guide">Guide</option>
-                  <option value="admin">Admin</option>
-                </Field>
-                <ErrorMessage
-                  name="role"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
-                />
-              </div>
-
-              {/* Password */}
-              <div>
-                <Field
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-                <ErrorMessage
-                  name="password"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
-                />
-              </div>
-
-              {/* Confirm Password */}
-              <div>
-                <Field
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="Confirm Password"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-                <ErrorMessage
-                  name="confirmPassword"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isPending}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition flex items-center justify-center"
-              >
-                {isPending && <Loader2 className="h-5 w-5 mr-2 animate-spin" />}
-                {isPending ? "Registering..." : "Register"}
-              </button>
-            </Form>
-          )}
-        </Formik>
-
-        <p className="text-sm text-center mt-6 text-gray-600 px-2">
-          Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-blue-600 hover:underline font-medium "
+        <CardContent>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={RegisterSchema}
+            onSubmit={(values) => mutate(values)}
           >
-            Login
-          </a>
-        </p>
-      </div>
+            {() => (
+              <Form className="space-y-5">
+                {/* Name */}
+                <div>
+                  <Label>Full Name</Label>
+                  <div className="relative">
+                    <Field
+                      as={Input}
+                      type="text"
+                      name="name"
+                      placeholder="Enter Your Name ..."
+                      className="pl-10"
+                    />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-70" />
+                  </div>
+                  <ErrorMessage
+                    name="name"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <Label>Email</Label>
+                  <div className="relative">
+                    <Field
+                      as={Input}
+                      type="email"
+                      name="email"
+                      placeholder="email@example.com"
+                      className="pl-10"
+                    />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-70" />
+                  </div>
+                  <ErrorMessage
+                    name="email"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <Label>Phone</Label>
+                  <div className="relative">
+                    <Field
+                      as={Input}
+                      type="text"
+                      name="phone"
+                      placeholder="98XXXXXXXX"
+                      className="pl-10"
+                    />
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-70" />
+                  </div>
+                  <ErrorMessage
+                    name="phone"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                {/* Role */}
+                <div>
+                  <Label>Role</Label>
+                  <Field
+                    as="select"
+                    name="role"
+                    className="w-full border rounded-md px-3 py-2"
+                  >
+                    <option value="traveler">Traveler</option>
+                    <option value="admin">Admin</option>
+                  </Field>
+                  <ErrorMessage
+                    name="role"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                {/* Password */}
+                <div>
+                  <Label>Password</Label>
+                  <div className="relative">
+                    <Field
+                      as={Input}
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="••••••••"
+                      className="pl-10 pr-10"
+                    />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-70" />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((s) => !s)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  <ErrorMessage
+                    name="password"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                {/* Confirm Password */}
+                <div>
+                  <Label>Confirm Password</Label>
+                  <div className="relative">
+                    <Field
+                      as={Input}
+                      type={showConfirm ? "text" : "password"}
+                      name="confirmPassword"
+                      placeholder="••••••••"
+                      className="pl-10 pr-10"
+                    />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-70" />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirm((s) => !s)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                    >
+                      {showConfirm ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  <ErrorMessage
+                    name="confirmPassword"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                {/* Submit */}
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending && (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  )}
+                  {isPending ? "Registering..." : "Register"}
+                </Button>
+
+                <Separator className="my-2" />
+
+                <p className="text-sm text-center text-muted-foreground">
+                  Already have an account?{" "}
+                  <a className="underline underline-offset-4" href="/login">
+                    Login
+                  </a>
+                </p>
+              </Form>
+            )}
+          </Formik>
+        </CardContent>
+      </Card>
     </div>
   );
 }

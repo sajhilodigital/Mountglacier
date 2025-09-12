@@ -1,12 +1,10 @@
 // app/layout.tsx
+import AdminGuard from "@/guard/AuthGuard";
+import ReactQueryClientProvider from "@/provider/QueryClientProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Sidebar from "@/components/Admin/sidebar";
-import Header from "@/components/navbar/header";
 import { Toaster } from "sonner";
-import ReactQueryClientProvider from "@/provider/QueryClientProvider";
-import AdminGuard from "@/guard/AuthGuard";
+import "@/app/globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

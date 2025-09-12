@@ -27,7 +27,7 @@ const COOKIE_EXPIRY_MS = parseInt(
 
 // -------------------- REGISTER --------------------
 router.post(
-  "/user/register",
+  "/register",
   validateReqBody(userRegisterSchema),
   async (req, res) => {
     try {
@@ -71,7 +71,7 @@ router.post(
 );
 
 // -------------------- LOGIN --------------------
-router.post("/user/login", validateReqBody(loginSchema), async (req, res) => {
+router.post("/login", validateReqBody(loginSchema), async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -129,7 +129,7 @@ router.post("/user/login", validateReqBody(loginSchema), async (req, res) => {
 });
 
 // -------------------- LOGOUT --------------------
-router.post("/user/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   try {
     res.clearCookie("accessToken", {
       httpOnly: true,
@@ -147,5 +147,8 @@ router.post("/user/logout", (req, res) => {
     });
   }
 });
+
+// -------------------- AUTHENTICATION --------------------
+
 
 export { router as userController };
